@@ -1,4 +1,4 @@
-package server;
+package database;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,9 +12,14 @@ import java.sql.Statement;
  */
 public class JDBCDatabase {
 	private String url;
+	private String username;
+	private String password;
 	
 	public JDBCDatabase(String user, String password){
-		url = "jdbc:mysql://localhost/mysql?&user=" + user + "&password=" + password;
+		this.username = user;
+		this.password = password;
+		
+		url = "jdbc:mysql://localhost/mysql?&user=" + this.username + "&password=" + this.password;
 		
 		try {   
 			Class.forName ("com.mysql.jdbc.Driver");

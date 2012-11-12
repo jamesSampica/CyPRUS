@@ -1,6 +1,8 @@
-package server;
+package serverOld;
 import java.io.*;
 import java.net.*;
+
+import database.JDBCDatabase;
 
 public class ServerProvider{
 	private ServerSocket providerSocket;

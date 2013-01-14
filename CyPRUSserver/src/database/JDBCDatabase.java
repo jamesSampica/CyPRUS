@@ -11,15 +11,25 @@ import java.sql.Statement;
  * @author James Sampica
  */
 public class JDBCDatabase {
+	
 	private String url;
 	private String username;
 	private String password;
 	
-	public JDBCDatabase(String user, String password){
-		this.username = user;
-		this.password = password;
+	private static JDBCDatabase jdbcDatabase;
+	
+	public JDBCDatabase(){
+		if(jdbcDatabase != null){
+			throw new UnsupportedOperationException("This is a singleton class");
+		}
+	}
+	
+	public static void setupJDBCDatabase(String user, String password){
+		JDBCDatabase db = getDatabase();
+		db.setUsername(user);
+		db.setPassword(password);
 		
-		url = "jdbc:mysql://localhost/mysql?&user=" + this.username + "&password=" + this.password;
+		db.setURL("jdbc:mysql://localhost/mysql?&user=" + db.getUsername() + "&password=" + db.getPassword());
 		
 		try {   
 			Class.forName ("com.mysql.jdbc.Driver");
@@ -54,5 +64,29 @@ public class JDBCDatabase {
 			System.out.println("An sql error occurred " + sqle.getErrorCode());
 		}
 		return "";  
+	}
+	public String getUsername(){
+		return username;
+	}
+	public void setUsername(String username){
+		this.username = username;
+	}
+	public String getPassword(){
+		return password;
+	}
+	public void setPassword(String password){
+		this.password = password;
+	}
+	public String getURL(){
+		return url;
+	}
+	public void setURL(String url){
+		this.url = url;
+	}
+	public static JDBCDatabase getDatabase(){
+		if(jdbcDatabase == null){
+			jdbcDatabase = new JDBCDatabase();
+		}
+		return jdbcDatabase;
 	}
 }

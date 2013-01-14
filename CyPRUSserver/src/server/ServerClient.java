@@ -1,6 +1,6 @@
 package server;
 
-import java.net.Socket;
+import javax.net.ssl.SSLSocket;
 
 import support.BaseMessageClient;
 
@@ -8,7 +8,7 @@ public class ServerClient extends BaseMessageClient {
 
 	private Server server;
 	
-	public ServerClient(Socket client, Server server) {
+	public ServerClient(SSLSocket client, Server server) {
 		super(client);
 		this.server = server;
 	}

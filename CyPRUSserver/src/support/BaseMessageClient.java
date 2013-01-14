@@ -1,18 +1,33 @@
 package support;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 public abstract class BaseMessageClient implements MessageClient {
 
-	private Socket socket;
+	private SSLSocket socket;
 	private MessageReader reader;
 	private MessageWriter writer;
 
-	public BaseMessageClient(String host, int port) throws Exception {
-		this(new Socket(host, port));
+	public BaseMessageClient(String host, int port) throws Exception {	
+		this(prepareSSLSocket(host, port));
 	}
 
-	public BaseMessageClient(Socket socket) {
+	public BaseMessageClient(SSLSocket socket) {
 		try {
 			this.socket = socket;
 			System.out.println("Creating reader");
@@ -39,7 +54,7 @@ public abstract class BaseMessageClient implements MessageClient {
 		return writer;
 	}
 	
-	public Socket getSocket() {
+	public SSLSocket getSocket() {
 		return socket;
 	}
 	
@@ -69,5 +84,13 @@ public abstract class BaseMessageClient implements MessageClient {
 			throw new RuntimeException(e);
 		}
 	}
-
+	private static SSLSocket prepareSSLSocket(String host, int port){
+		try {
+			SSLSocketFactory f = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			return (SSLSocket) f.createSocket(host, port);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

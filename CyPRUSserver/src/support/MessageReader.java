@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.net.ssl.SSLException;
+
 public class MessageReader implements Runnable {
 
 	private static final Executor POOL = Executors.newFixedThreadPool(16);
@@ -49,7 +51,10 @@ public class MessageReader implements Runnable {
 				};
 				POOL.execute(runnable);
 			}
-		} catch (Exception e) {
+		} catch (SSLException e){
+			System.out.println("Possible unidentified user...rejecting handshake");
+			e.printStackTrace();
+		}catch (Exception e) {
 			this.client.errorOnRead(e);
 			throw new RuntimeException(e);
 		}

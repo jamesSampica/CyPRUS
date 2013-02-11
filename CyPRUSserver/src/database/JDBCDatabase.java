@@ -1,11 +1,13 @@
 package database;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * @author James Sampica
@@ -39,7 +41,22 @@ public class JDBCDatabase {
 			//e.printStackTrace();
 		}
 	}
-	public String queryDatabase(String query)  throws ClassNotFoundException,IOException {
+	public void storeParkingOffense(String plate, String lot){
+		try {
+			Connection connection = DriverManager.getConnection(url);
+			Statement stmt = connection.createStatement();
+
+			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			
+			stmt.executeUpdate("insert into ParkingViolations values (" + plate + "," + lot + "," + dateFormat.format(cal.getTime()) + ")");
+
+		} catch (SQLException sqle){ 
+			System.out.println("An sql error occurred " + sqle.getErrorCode());
+		}
+
+	}
+	public String queryDatabase(String query) {
 		try {
 			
 			Connection connection = DriverManager.getConnection(url);

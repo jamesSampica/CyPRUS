@@ -34,24 +34,24 @@ public class MessageReader implements Runnable {
 			while (this.isConnected()) {
 				int size = this.stream.readInt();
 				System.out.printf("Reading %d bytes%n", size);
-				byte[] message = new byte[size];
+				byte[] byteMessage = new byte[size];
 				for (int x = 0; x < size; x++) {
-					System.out.printf("reading byte %d of %d%n", x, size);
-					message[x] = (byte) this.stream.read();
+					System.out.printf("reading byte %d of %d%n", x+1, size);
+					byteMessage[x] = (byte) this.stream.read();
 				}
-				final String realMessage = new String(message);
+				final byte[] trueMessage = byteMessage;
 
 				Runnable runnable = new Runnable() {
 					@Override
 					public void run() {
-						client.onMessage(realMessage);
+						client.onMessage(trueMessage);
 					}
 				};
 				POOL.execute(runnable);
 			}
-		} catch (Exception e) {
+		}catch (Exception e) {
 			this.client.errorOnRead(e);
-			throw new RuntimeException(e);
+			//System.out.println("Encountered Read Error");
 		}
 
 	}

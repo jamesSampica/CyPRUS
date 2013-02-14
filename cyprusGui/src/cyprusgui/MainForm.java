@@ -4,25 +4,33 @@
  */
 package cyprusgui;
 
-import client.Client;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import client.ClientController;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import renderers.PlateDataListRenderer;
+import support.MessageClient;
+import support.Vehicle;
 
 /**
  *
- * @author James
+ * @author James Sampica
  */
-public class MainForm extends javax.swing.JFrame {
+public class MainForm extends javax.swing.JFrame implements MessageClient {
 
-    private Client client;
+    private Timer pendingTimer;
+    private DefaultListModel pendingModel;
+    private DefaultListModel recentModel;
+
     /**
      * Creates new form MainForm
      */
     public MainForm() throws Exception {
-        
+
         initComponents();
-        
-        //client = new Client( "localhost",  567 );
+
     }
 
     /**
@@ -49,7 +57,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        pendingList = new javax.swing.JList();
         recentViolationsPanel = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         recentFilterTextInput = new javax.swing.JTextField();
@@ -59,7 +67,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList();
+        recentList = new javax.swing.JList();
         searchPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         searchTextInput = new javax.swing.JTextField();
@@ -67,7 +75,7 @@ public class MainForm extends javax.swing.JFrame {
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
+        SearchList = new javax.swing.JList();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -77,9 +85,18 @@ public class MainForm extends javax.swing.JFrame {
         settingsMenu = new javax.swing.JMenu();
         serverSettingsMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
+        helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
+        toolsMenu = new javax.swing.JMenu();
+        browserMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CyPRUS");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jButton1.setText("Filter");
 
@@ -100,12 +117,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel4.setText("Date Entered");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        pendingList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(pendingList);
 
         javax.swing.GroupLayout vehiclesPendingPanelLayout = new javax.swing.GroupLayout(vehiclesPendingPanel);
         vehiclesPendingPanel.setLayout(vehiclesPendingPanelLayout);
@@ -173,12 +190,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel10.setText("Date of Violation");
 
-        jList3.setModel(new javax.swing.AbstractListModel() {
+        recentList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(jList3);
+        jScrollPane3.setViewportView(recentList);
 
         javax.swing.GroupLayout recentViolationsPanelLayout = new javax.swing.GroupLayout(recentViolationsPanel);
         recentViolationsPanel.setLayout(recentViolationsPanelLayout);
@@ -239,12 +256,12 @@ public class MainForm extends javax.swing.JFrame {
         searchButtonGroup.add(jRadioButton6);
         jRadioButton6.setText("Lot #");
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
+        SearchList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane2.setViewportView(SearchList);
 
         jLabel5.setText("Plate #");
 
@@ -329,7 +346,10 @@ public class MainForm extends javax.swing.JFrame {
 
         helpMenu.setText("Help");
 
-        aboutMenuItem.setText("About...");
+        helpMenuItem.setText("Help Contents");
+        helpMenu.add(helpMenuItem);
+
+        aboutMenuItem.setText("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aboutMenuItemActionPerformed(evt);
@@ -338,6 +358,18 @@ public class MainForm extends javax.swing.JFrame {
         helpMenu.add(aboutMenuItem);
 
         jMenuBar1.add(helpMenu);
+
+        toolsMenu.setText("Tools");
+
+        browserMenuItem.setText("Image Browser");
+        browserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browserMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(browserMenuItem);
+
+        jMenuBar1.add(toolsMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -356,17 +388,74 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        client.disconnect();
+
+        ClientController.disconnectClient();
+
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-        // TODO add your handling code here:
+        AboutForm aboutForm = new AboutForm(this, true);
+        aboutForm.setVisible(true);
+
+        //client.writeMessage("");
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void serverSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverSettingsMenuItemActionPerformed
-        // TODO add your handling code here:
+
+        SettingsDialog settingsdialog = new SettingsDialog(this, true);
+        settingsdialog.setVisible(true);
+
     }//GEN-LAST:event_serverSettingsMenuItemActionPerformed
+
+    private void browserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browserMenuItemActionPerformed
+
+        if (ClientController.isConnected()) {
+            ImageBrowserForm ibf = new ImageBrowserForm();
+            ibf.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "You must be connected to the server to use the image browser");
+        }
+    }//GEN-LAST:event_browserMenuItemActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+        ClientController.setup();
+        ClientController.registerDataListener(this);
+
+        pendingModel = new DefaultListModel();
+        recentModel = new DefaultListModel();
+        
+        PlateDataListRenderer renderer = new PlateDataListRenderer();
+        pendingList.setCellRenderer(renderer);
+        pendingList.setModel(pendingModel);
+        
+        recentList.setModel(recentModel);
+
+        //Timer that iterates over all the vehicles in the model and updates their countdowns
+        ActionListener taskPerformer = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                for(int i = 0; i < pendingModel.getSize(); i++){
+                    Vehicle v = (Vehicle)pendingModel.get(i);
+                    v.setTimeLeft(v.getTimeLeft()-1);
+                    
+                    //If no time left, remove and add to recent list
+                    if(v.getTimeLeft() == 0){
+                        pendingModel.remove(i);
+                        recentModel.add(0, v);
+                    }
+                }
+                pendingList.repaint();
+            }
+        };
+        pendingTimer = new Timer(1000, taskPerformer);
+        pendingTimer.setRepeats(true);
+        pendingTimer.start();
+        
+        ClientController.test();
+
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -375,7 +464,7 @@ public class MainForm extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -391,21 +480,24 @@ public class MainForm extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override 
+            @Override
             public void run() {
                 try {
                     new MainForm().setVisible(true);
                 } catch (Exception ex) {
-                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex.getMessage());
                 }
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList SearchList;
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem browserMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -419,9 +511,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
-    private javax.swing.JList jList3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
@@ -437,14 +526,36 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.ButtonGroup pendingButtonGroup;
     private javax.swing.JTextField pendingFilterTextInput;
+    private javax.swing.JList pendingList;
     private javax.swing.ButtonGroup recentButtonGroup;
     private javax.swing.JTextField recentFilterTextInput;
+    private javax.swing.JList recentList;
     private javax.swing.JPanel recentViolationsPanel;
     private javax.swing.ButtonGroup searchButtonGroup;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTextField searchTextInput;
     private javax.swing.JMenuItem serverSettingsMenuItem;
     private javax.swing.JMenu settingsMenu;
+    private javax.swing.JMenu toolsMenu;
     private javax.swing.JPanel vehiclesPendingPanel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void errorOnWrite(Exception e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void errorOnRead(Exception e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void onMessage(byte[] message) {
+        String dataString = new String(message);
+        String[] vehicleData = dataString.split(" ");
+        Vehicle v = new Vehicle(vehicleData[0], vehicleData[1], vehicleData[2]);
+        pendingModel.addElement(v);
+        
+    }
 }

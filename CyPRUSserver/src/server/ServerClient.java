@@ -1,6 +1,5 @@
 package server;
 
-import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -9,22 +8,19 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Locale;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
-import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
-import org.apache.commons.io.FilenameUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import support.BaseMessageClient;
@@ -40,7 +36,6 @@ public class ServerClient extends BaseMessageClient {
 
 	@Override
 	public void onMessage(byte[] message) {
-		
 		
 		
 		//r is image request
@@ -80,9 +75,9 @@ public class ServerClient extends BaseMessageClient {
 			Path dir = Paths.get("./plateStorage");
 			try (DirectoryStream<Path> imageStream = Files.newDirectoryStream(dir)) {
 				for (Path entry: imageStream) {
-					String plateString = entry.getName(entry.getNameCount()-1).toString();
-            		plateString = FilenameUtils.removeExtension(plateString);
-					if (plateString.equals(searchString.trim())) {
+					String fileName = entry.getName(entry.getNameCount()-1).toString();
+					fileName = fileName.substring(0, fileName.length()-5);
+					if (fileName.equals(searchString.trim())) {
 						try {
                     		byte[] imageFile = Files.readAllBytes(entry);  
 							writeMessage(imageFile);
@@ -95,6 +90,7 @@ public class ServerClient extends BaseMessageClient {
 			catch(Exception e){
 			}
 		}
+		//else if(message[0] == 0xFF){
 		else{
 			//receiving image from sensors
 			
@@ -104,9 +100,9 @@ public class ServerClient extends BaseMessageClient {
 			try {
 				//Path img = Paths.get("./plateStorage/12345.jpg");
 				//byte[] imageFile = Files.readAllBytes(img);
-
-		        //reader.setInput(new FileImageInputStream(new File("./plateStorage/12345.jpg")));
-				reader.setInput(new MemoryCacheImageInputStream(new ByteArrayInputStream(message)));
+				
+		        reader.setInput(new FileImageInputStream(new File("./plateStorage/12345.jpg")));
+				//reader.setInput(new MemoryCacheImageInputStream(new ByteArrayInputStream(message)));
 				
 		        IIOMetadata imageMetadata = reader.getImageMetadata(0);
 	            Element tree = (Element) imageMetadata.getAsTree("javax_imageio_jpeg_image_1.0");
@@ -116,12 +112,15 @@ public class ServerClient extends BaseMessageClient {
 	            if (comNL.getLength() != 0) {
 	                IIOMetadataNode comNode = (IIOMetadataNode) comNL.item(0);
 	                byte[] plateBytes = (byte[])comNode.getUserObject();
-	                String nodeData = new String(plateBytes);
+	                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	                Date date = new Date();
+	                String nodeData = new String(plateBytes) + " " + dateFormat.format(date);
 	                
 	                //String 0 = Plate
 	                //String 1 = Lot
 	                String[] nodeDataSplit = nodeData.split(" ");
 	                this.server.processReceivedData(nodeDataSplit);
+	                writeMessage(nodeData.getBytes());
 	            }
 				
 			} catch (IOException e) {

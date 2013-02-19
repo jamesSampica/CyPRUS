@@ -51,6 +51,7 @@ public class MessageWriter implements Runnable {
 			} catch (InterruptedException e) {
 				System.out.println("Byte Stream was interrupted " + e.getMessage());
 			} catch ( IOException e ) {
+				this.setConnected(false);
 				this.client.errorOnWrite(e);
 			}
 		}

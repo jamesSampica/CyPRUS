@@ -24,6 +24,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import support.BaseMessageClient;
+import support.Vehicle;
+import utils.SerializationUtils;
 
 public class ServerClient extends BaseMessageClient {
 
@@ -33,106 +35,24 @@ public class ServerClient extends BaseMessageClient {
 		super(client);
 		this.server = server;
 	}
-
+	
 	@Override
 	public void onMessage(byte[] message) {
 		
-		
 		//r is image request
 		if(message[0] == 'r'){
-			
-			//get image index desired
-			int index = indexFromByteArray(message);
-			int count = 0;
-			
-			//Get resources folder
-			Path dir = Paths.get("./plateStorage");
-			try (DirectoryStream<Path> imageStream = Files.newDirectoryStream(dir)) {
-				for (Path entry: imageStream) {
-					if (count == index) {
-						try {
-                    		byte[] imageFile = Files.readAllBytes(entry);
-							writeMessage(imageFile);
-						} catch (IOException e) {
-							System.out.println(e.getMessage());
-						}
-                    }
-					count++;	
-				}
-			}
-			catch(Exception e){
-				System.out.println(e.getMessage());
-			}
+			processImageRequest(message);
 		}
 		//s is search
 		else if(message[0] == 's'){
-			
-			byte[] searchParameter = new byte[8];
-			System.arraycopy(message, 1, searchParameter, 0, searchParameter.length);
-			String searchString = new String(searchParameter);
-			
-			//Get resources folder
-			Path dir = Paths.get("./plateStorage");
-			try (DirectoryStream<Path> imageStream = Files.newDirectoryStream(dir)) {
-				for (Path entry: imageStream) {
-					String fileName = entry.getName(entry.getNameCount()-1).toString();
-					fileName = fileName.substring(0, fileName.length()-5);
-					if (fileName.equals(searchString.trim())) {
-						try {
-                    		byte[] imageFile = Files.readAllBytes(entry);  
-							writeMessage(imageFile);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-                    }
-				}
-			}
-			catch(Exception e){
-			}
+			processSearchRequest(message);
+		}
+		else if(message[0] == 'a'){
+			processActiveVehiclesRequest();
 		}
 		//else if(message[0] == 0xFF){
 		else{
-			//receiving image from sensors
-			
-			ImageWriter writer = ImageIO.getImageWritersBySuffix("jpeg").next();
-			ImageReader reader = ImageIO.getImageReader(writer);
-			
-			try {
-				//Path img = Paths.get("./plateStorage/12345.jpg");
-				//byte[] imageFile = Files.readAllBytes(img);
-				
-		        reader.setInput(new FileImageInputStream(new File("./plateStorage/12345.jpg")));
-				//reader.setInput(new MemoryCacheImageInputStream(new ByteArrayInputStream(message)));
-				
-		        IIOMetadata imageMetadata = reader.getImageMetadata(0);
-	            Element tree = (Element) imageMetadata.getAsTree("javax_imageio_jpeg_image_1.0");
-	            NodeList comNL = tree.getElementsByTagName("com");
-	            
-	            
-	            if (comNL.getLength() != 0) {
-	                IIOMetadataNode comNode = (IIOMetadataNode) comNL.item(0);
-	                byte[] plateBytes = (byte[])comNode.getUserObject();
-	                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-	                Date date = new Date();
-	                String nodeData = new String(plateBytes) + " " + dateFormat.format(date);
-	                
-	                //String 0 = Plate
-	                //String 1 = Lot
-	                String[] nodeDataSplit = nodeData.split(" ");
-	                this.server.processReceivedData(nodeDataSplit);
-	                writeMessage(nodeData.getBytes());
-	            }
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			finally{
-				reader.dispose();
-				writer.dispose();
-				
-			}
-			
+			processImageReceive(message);
 		}
 	}
 	
@@ -144,4 +64,107 @@ public class ServerClient extends BaseMessageClient {
 	            (b[1] & 0xFF) << 24;
 	}
 
+	private void processActiveVehiclesRequest(){
+		this.server.processActiveVehiclesRequest(this);
+	}
+	
+	private void processImageRequest(byte[] message){
+		
+		//get image index desired
+		int index = indexFromByteArray(message);
+		int count = 0;
+		
+		//Get resources folder
+		Path dir = Paths.get("./plateStorage");
+		try (DirectoryStream<Path> imageStream = Files.newDirectoryStream(dir)) {
+			for (Path entry: imageStream) {
+				if (count == index) {
+					try {
+                		byte[] imageFile = Files.readAllBytes(entry);
+						if(this.getWriter().isConnected()){
+							Vehicle toSend = new Vehicle();
+							toSend.setImageBytes(imageFile);
+							byte[] packetBytes = SerializationUtils.vehicleToBytes(toSend);
+							writeMessage(packetBytes);
+						}
+					} catch (IOException e) {
+						System.out.println(e.getMessage());
+					}
+                }
+				count++;	
+			}
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	private void processSearchRequest(byte[] message){
+		byte[] searchParameter = new byte[8];
+		System.arraycopy(message, 1, searchParameter, 0, searchParameter.length);
+		String searchString = new String(searchParameter);
+		
+		//Get resources folder
+		Path dir = Paths.get("./plateStorage");
+		try (DirectoryStream<Path> imageStream = Files.newDirectoryStream(dir)) {
+			for (Path entry: imageStream) {
+				String fileName = entry.getName(entry.getNameCount()-1).toString();
+				fileName = fileName.substring(0, fileName.length()-5);
+				if (fileName.equals(searchString.trim())) {
+					try {
+                		byte[] imageFile = Files.readAllBytes(entry);  
+						if(this.getWriter().isConnected()){
+							Vehicle toSend = new Vehicle();
+							toSend.setImageBytes(imageFile);
+							byte[] packetBytes = SerializationUtils.vehicleToBytes(toSend);
+							writeMessage(packetBytes);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+                }
+			}
+		}
+		catch(Exception e){
+		}
+	}
+	private void processImageReceive(byte[] message){
+		
+		//receiving image from sensors
+		
+		ImageWriter writer = ImageIO.getImageWritersBySuffix("jpeg").next();
+		ImageReader reader = ImageIO.getImageReader(writer);
+		
+		try {
+			
+	        //reader.setInput(new FileImageInputStream(new File("./plateStorage/12345.jpg")));
+			reader.setInput(new MemoryCacheImageInputStream(new ByteArrayInputStream(message)));
+			
+	        IIOMetadata imageMetadata = reader.getImageMetadata(0);
+            Element tree = (Element) imageMetadata.getAsTree("javax_imageio_jpeg_image_1.0");
+            NodeList comNL = tree.getElementsByTagName("com");
+            
+            if (comNL.getLength() != 0) {
+                IIOMetadataNode comNode = (IIOMetadataNode) comNL.item(0);
+                byte[] plateBytes = (byte[])comNode.getUserObject();
+                String nodeData = new String(plateBytes);
+                String[] plateAndLot = nodeData.split(" ");
+                
+        		if(plateAndLot.length >= 2){
+        			Vehicle capturedVehicle = new Vehicle(plateAndLot[0], plateAndLot[1]);
+                    capturedVehicle.setImageBytes(message);
+                    this.server.processReceivedData(capturedVehicle);
+        		}
+                
+            }
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			reader.dispose();
+			writer.dispose();
+			
+		}
+	}
 }

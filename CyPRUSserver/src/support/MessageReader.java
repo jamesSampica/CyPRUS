@@ -2,6 +2,7 @@ package support;
 
 import java.io.DataInputStream;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -49,7 +50,8 @@ public class MessageReader implements Runnable {
 				};
 				POOL.execute(runnable);
 			}
-		}catch (Exception e) {
+		}
+		catch (Exception e) {
 			this.client.errorOnRead(e);
 			//System.out.println("Encountered Read Error");
 		}

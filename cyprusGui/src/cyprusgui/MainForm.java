@@ -5,25 +5,22 @@
 package cyprusgui;
 
 import client.ClientController;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
-import renderers.PlateDataListRenderer;
-import support.MessageClient;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import support.Vehicle;
+import support.VehicleListener;
+import tableModels.PendingVehicleDataModel;
+import tableModels.RecentVehicleDataModel;
 
 /**
  *
  * @author James Sampica
  */
-public class MainForm extends javax.swing.JFrame implements MessageClient {
+public class MainForm extends javax.swing.JFrame implements VehicleListener {
 
-    private Timer pendingTimer;
-    private DefaultListModel pendingModel;
-    private DefaultListModel recentModel;
-
+    private PendingVehicleDataModel pendingModel;
+    private RecentVehicleDataModel recentModel;
     /**
      * Creates new form MainForm
      */
@@ -56,8 +53,8 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        pendingList = new javax.swing.JList();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        pendingTable = new javax.swing.JTable();
         recentViolationsPanel = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         recentFilterTextInput = new javax.swing.JTextField();
@@ -66,19 +63,19 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        recentList = new javax.swing.JList();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        recentTable = new javax.swing.JTable();
         searchPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         searchTextInput = new javax.swing.JTextField();
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        SearchList = new javax.swing.JList();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        searchTable = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
@@ -93,10 +90,18 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CyPRUS");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
+
+        jTabbedPane2.setFocusable(false);
 
         jButton1.setText("Filter");
 
@@ -109,48 +114,68 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         pendingButtonGroup.add(jRadioButton3);
         jRadioButton3.setText("Minutes Remaining");
 
-        jLabel1.setText("Plate #");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Plate1.png"))); // NOI18N
+        jLabel1.setToolTipText("Plate Number");
 
-        jLabel2.setText("Lot #");
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Lot1.png"))); // NOI18N
+        jLabel2.setToolTipText("Lot Information");
 
-        jLabel3.setText("Minutes Remaining");
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/calendars1.png"))); // NOI18N
+        jLabel3.setToolTipText("Date Entered");
 
-        jLabel4.setText("Date Entered");
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/time1.png"))); // NOI18N
+        jLabel4.setToolTipText("Time Remaining");
 
-        pendingList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(pendingList);
+        pendingTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        pendingTable.setFocusable(false);
+        pendingTable.setTableHeader(null);
+        jScrollPane4.setViewportView(pendingTable);
 
         javax.swing.GroupLayout vehiclesPendingPanelLayout = new javax.swing.GroupLayout(vehiclesPendingPanel);
         vehiclesPendingPanel.setLayout(vehiclesPendingPanelLayout);
         vehiclesPendingPanelLayout.setHorizontalGroup(
             vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, vehiclesPendingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, vehiclesPendingPanelLayout.createSequentialGroup()
+                        .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1)))
+                        .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton3))
+                            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addGap(65, 65, 65)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton1)
-                        .addGap(0, 4, Short.MAX_VALUE))
-                    .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(58, 58, 58)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)))
+                        .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         vehiclesPendingPanelLayout.setVerticalGroup(
@@ -164,13 +189,14 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
                     .addComponent(jRadioButton3)
                     .addComponent(jRadioButton1))
                 .addGap(18, 18, 18)
-                .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -190,12 +216,20 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
 
         jLabel10.setText("Date of Violation");
 
-        recentList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(recentList);
+        recentTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        recentTable.setFocusable(false);
+        recentTable.setTableHeader(null);
+        jScrollPane5.setViewportView(recentTable);
 
         javax.swing.GroupLayout recentViolationsPanelLayout = new javax.swing.GroupLayout(recentViolationsPanel);
         recentViolationsPanel.setLayout(recentViolationsPanelLayout);
@@ -204,13 +238,13 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
             .addGroup(recentViolationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, recentViolationsPanelLayout.createSequentialGroup()
+                    .addComponent(jScrollPane5)
+                    .addGroup(recentViolationsPanelLayout.createSequentialGroup()
                         .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(recentViolationsPanelLayout.createSequentialGroup()
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(recentFilterTextInput, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                                .addComponent(recentFilterTextInput))
                             .addGroup(recentViolationsPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addGap(98, 98, 98)
@@ -239,7 +273,7 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -256,18 +290,25 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         searchButtonGroup.add(jRadioButton6);
         jRadioButton6.setText("Lot #");
 
-        SearchList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(SearchList);
-
         jLabel5.setText("Plate #");
 
         jLabel6.setText("Lot #");
 
         jLabel7.setText("Date of Violation");
+
+        searchTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        searchTable.setTableHeader(null);
+        jScrollPane6.setViewportView(searchTable);
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
@@ -276,9 +317,6 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())
                     .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -294,9 +332,12 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
                         .addComponent(jLabel5)
                         .addGap(97, 97, 97)
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel7)
-                        .addGap(39, 39, 39))))
+                        .addGap(39, 39, 39))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane6)
+                        .addContainerGap())))
         );
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +355,7 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -377,18 +418,18 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-493)/2, (screenSize.height-598)/2, 493, 598);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-
         ClientController.disconnectClient();
 
         System.exit(0);
@@ -397,8 +438,6 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         AboutForm aboutForm = new AboutForm(this, true);
         aboutForm.setVisible(true);
-
-        //client.writeMessage("");
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void serverSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverSettingsMenuItemActionPerformed
@@ -409,10 +448,17 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
     }//GEN-LAST:event_serverSettingsMenuItemActionPerformed
 
     private void browserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browserMenuItemActionPerformed
-
+        
         if (ClientController.isConnected()) {
-            ImageBrowserForm ibf = new ImageBrowserForm();
-            ibf.setVisible(true);
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    ImageBrowserForm ibf = new ImageBrowserForm();
+                    ibf.setVisible(true);
+                }
+            ;
+            };
+            new Thread(r).start();
         } else {
             JOptionPane.showMessageDialog(this, "You must be connected to the server to use the image browser");
         }
@@ -423,39 +469,24 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         ClientController.setup();
         ClientController.registerDataListener(this);
 
-        pendingModel = new DefaultListModel();
-        recentModel = new DefaultListModel();
-        
-        PlateDataListRenderer renderer = new PlateDataListRenderer();
-        pendingList.setCellRenderer(renderer);
-        pendingList.setModel(pendingModel);
-        
-        recentList.setModel(recentModel);
+        recentModel = new RecentVehicleDataModel();
+        pendingModel = new PendingVehicleDataModel(recentModel);
 
-        //Timer that iterates over all the vehicles in the model and updates their countdowns
-        ActionListener taskPerformer = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                for(int i = 0; i < pendingModel.getSize(); i++){
-                    Vehicle v = (Vehicle)pendingModel.get(i);
-                    v.setTimeLeft(v.getTimeLeft()-1);
-                    
-                    //If no time left, remove and add to recent list
-                    if(v.getTimeLeft() == 0){
-                        pendingModel.remove(i);
-                        recentModel.add(0, v);
-                    }
-                }
-                pendingList.repaint();
-            }
-        };
-        pendingTimer = new Timer(1000, taskPerformer);
-        pendingTimer.setRepeats(true);
-        pendingTimer.start();
-        
-        ClientController.test();
+        pendingTable.setModel(pendingModel);
+        recentTable.setModel(recentModel);
+
+        //ClientController.test();
+        ClientController.activeVehiclesRequest();
 
     }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        ClientController.disconnectClient();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -491,7 +522,6 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList SearchList;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem browserMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
@@ -520,19 +550,20 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JRadioButton jRadioButton7;
     private javax.swing.JRadioButton jRadioButton8;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.ButtonGroup pendingButtonGroup;
     private javax.swing.JTextField pendingFilterTextInput;
-    private javax.swing.JList pendingList;
+    private javax.swing.JTable pendingTable;
     private javax.swing.ButtonGroup recentButtonGroup;
     private javax.swing.JTextField recentFilterTextInput;
-    private javax.swing.JList recentList;
+    private javax.swing.JTable recentTable;
     private javax.swing.JPanel recentViolationsPanel;
     private javax.swing.ButtonGroup searchButtonGroup;
     private javax.swing.JPanel searchPanel;
+    private javax.swing.JTable searchTable;
     private javax.swing.JTextField searchTextInput;
     private javax.swing.JMenuItem serverSettingsMenuItem;
     private javax.swing.JMenu settingsMenu;
@@ -541,21 +572,15 @@ public class MainForm extends javax.swing.JFrame implements MessageClient {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void errorOnWrite(Exception e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void errorOnRead(Exception e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void onMessage(byte[] message) {
-        String dataString = new String(message);
-        String[] vehicleData = dataString.split(" ");
-        Vehicle v = new Vehicle(vehicleData[0], vehicleData[1], vehicleData[2]);
-        pendingModel.addElement(v);
+    public void onVehicleMessage( Vehicle vehicle ) {
+        
+        if(!pendingModel.contains(vehicle)){
+            pendingModel.addRow(vehicle);
+            pendingTable.addRowSelectionInterval(0, 0);
+        }
+        else{
+            pendingModel.removeRowByPlateAndLot(vehicle.getPlateNumber(), vehicle.getLotNumber());
+        }
         
     }
 }

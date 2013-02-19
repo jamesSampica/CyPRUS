@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package support;
+package utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

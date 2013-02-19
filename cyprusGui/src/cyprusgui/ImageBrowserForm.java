@@ -7,18 +7,19 @@ package cyprusgui;
 import client.ClientController;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
-import support.ImageUtils;
 import support.MessageClient;
+import support.Vehicle;
+import support.VehicleListener;
+import utils.ImageUtils;
 
 /**
  *
  * @author James
  */
-public class ImageBrowserForm extends javax.swing.JFrame implements MessageClient {
+public class ImageBrowserForm extends javax.swing.JFrame implements VehicleListener {
 
     private int index;
-    private ArrayList<byte[]> images;
-    private ArrayList<String> plateStrings;
+    private ArrayList<Vehicle> vehicles;
     private boolean initialImageShown;
     private boolean searching;
 
@@ -33,8 +34,8 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
         imageLabel.setText("Initializing...");
         initialImageShown = false;
         searching = false;
-        plateStrings = new ArrayList<>();
-        images = new ArrayList<>();
+        
+        vehicles = new ArrayList<>();
         index = 0;
         ClientController.sendImageRequest(index);
         ClientController.sendImageRequest(index + 1);
@@ -80,7 +81,9 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
             }
         });
 
+        imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imageLabel.setMaximumSize(new java.awt.Dimension(460, 440));
+        imageLabel.setPreferredSize(new java.awt.Dimension(460, 440));
 
         searchButton.setText("Search");
         searchButton.setMaximumSize(new java.awt.Dimension(73, 23));
@@ -96,44 +99,42 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(previousButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(previousButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(previousButton)
                     .addComponent(nextButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 469, Short.MAX_VALUE))
+                .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-496)/2, (screenSize.height-458)/2, 496, 458);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
 
-        if (index < images.size() - 1) {
+        if (index < vehicles.size() - 1) {
             index++;
-            imageLabel.setIcon(new ImageIcon(images.get(index)));
-            searchTextField.setText(plateStrings.get(index));
+            imageLabel.setIcon(new ImageIcon(vehicles.get(index).getImageBytes()));
+            searchTextField.setText(vehicles.get(index).getPlateNumber());
 
-            if (index == images.size() - 1) {
+            if (index == vehicles.size() - 1) {
                 ClientController.sendImageRequest(index + 1);
             }
         }
@@ -146,8 +147,8 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         if (index > 0) {
             index--;
-            imageLabel.setIcon(new ImageIcon(images.get(index)));
-            searchTextField.setText(plateStrings.get(index));
+            imageLabel.setIcon(new ImageIcon(vehicles.get(index).getImageBytes()));
+            searchTextField.setText(vehicles.get(index).getPlateNumber());
         }
     }//GEN-LAST:event_previousButtonActionPerformed
 
@@ -156,10 +157,15 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
         String searchParam = searchTextField.getText().trim();
         if (!searchParam.isEmpty()) {
             //Search already downloaded images
-            if (plateStrings.contains(searchParam)) {
-                imageLabel.setIcon(new ImageIcon(images.get(plateStrings.indexOf(searchParam))));
-                searchTextField.setText(plateStrings.get(plateStrings.indexOf(searchParam)));
-            } else {
+            boolean found = false;
+            for(Vehicle v: vehicles){
+                if (v.getPlateNumber().equals(searchParam)) {
+                   found = true;
+                   imageLabel.setIcon(new ImageIcon(v.getImageBytes()));
+                   searchTextField.setText(v.getPlateNumber());
+                }
+            }
+            if (!found) {
                 searching = true;
                 ClientController.searchImageRequest(searchParam.substring(0, 7));
             }
@@ -174,31 +180,26 @@ public class ImageBrowserForm extends javax.swing.JFrame implements MessageClien
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void errorOnWrite(Exception e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public void onVehicleMessage( Vehicle vehicle ) {
 
-    @Override
-    public void errorOnRead(Exception e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        String[] plateAndLot = ImageUtils.getPlateAndLotFromBytes(vehicle.getImageBytes());
+        if (plateAndLot != null && plateAndLot.length == 2) {
+            
+            vehicle.setPlateNumber(plateAndLot[0]);
+            vehicle.setLotNumber(plateAndLot[1]);
+            vehicles.add(vehicle);
 
-    @Override
-    public void onMessage(byte[] message) {
-
-        String[] plateAndLot = ImageUtils.getPlateAndLotFromBytes(message);
-        if (plateAndLot != null) {
-            plateStrings.add(plateAndLot[0]);
-            images.add(message);
-
+            
             if (!initialImageShown) {
                 imageLabel.setText("");
-                imageLabel.setIcon(new ImageIcon(images.get(0)));
-                searchTextField.setText(plateStrings.get(0));
+                imageLabel.setIcon(new ImageIcon(vehicle.getImageBytes()));
+                searchTextField.setText(vehicle.getPlateNumber());
                 initialImageShown = true;
-            } else if (searching) {
-                imageLabel.setIcon(new ImageIcon(images.get(images.size() - 1)));
-                searchTextField.setText(plateStrings.get(plateStrings.size() - 1));
+            } 
+            //If searching then set the image to be the one that was found
+            else if (searching) {
+                imageLabel.setIcon(new ImageIcon(vehicle.getImageBytes()));
+                searchTextField.setText(vehicle.getPlateNumber());
                 searching = false;
             }
         }

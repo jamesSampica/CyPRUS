@@ -17,6 +17,7 @@ public class Main {
 	    final Server server = createServerFromInputs(s);
 		
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				server.start();
 			};

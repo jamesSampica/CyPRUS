@@ -12,7 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import support.MessageClient;
+import support.Vehicle;
+import support.VehicleListener;
 
 /**
  *
@@ -22,8 +23,8 @@ public class ClientController {
     
     private static Client client;
     
-    private static ArrayList<MessageClient> imageListeners;
-    private static ArrayList<MessageClient> dataListeners;
+    private static ArrayList<VehicleListener> imageListeners;
+    private static ArrayList<VehicleListener> dataListeners;
    
     
     private ClientController(){
@@ -143,19 +144,19 @@ public class ClientController {
         }
     }
     
-    public static void registerImageListener(MessageClient listener){
+    public static void registerImageListener(VehicleListener listener){
         imageListeners.add(listener);
     }
     
-    public static void unRegisterImageListener(MessageClient listener){
+    public static void unRegisterImageListener(VehicleListener listener){
         imageListeners.remove(listener);
     }
         
-    public static void registerDataListener(MessageClient listener){
+    public static void registerDataListener(VehicleListener listener){
         dataListeners.add(listener);
     }
             
-    public static void unRegisterDataListener(MessageClient listener){
+    public static void unRegisterDataListener(VehicleListener listener){
         dataListeners.remove(listener);
     }
     
@@ -187,17 +188,23 @@ public class ClientController {
         client.writeMessage(packet);
     }
     
-    public static void notifyImageListeners(byte[] message){
+    public static void activeVehiclesRequest(){
+        byte[] packet = new byte[1];
+        packet[0] = 'a';
+        client.writeMessage(packet);
+    }
+    
+    public static void notifyImageListeners(Vehicle vehicle){
         System.out.println("Notifying image listeners");
-        for(MessageClient mc: imageListeners){
-            mc.onMessage(message);
+        for(VehicleListener vl: imageListeners){
+            vl.onVehicleMessage(vehicle);
         }
     }
     
-    public static void notifyDataListeners(byte[] message){
+    public static void notifyDataListeners(Vehicle vehicle){
         System.out.println("Notifying data listeners");
-        for(MessageClient mc: dataListeners){
-            mc.onMessage(message);
+        for(VehicleListener vl: dataListeners){
+            vl.onVehicleMessage(vehicle);
         }
     }
 }

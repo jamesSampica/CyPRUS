@@ -50,10 +50,18 @@ public class Vehicle implements Serializable {
 		return lotNumber;
 	}
 
+	public void setEntryDate(long entryDate){
+		this.entryDate = entryDate;
+	}
+	
 	public long getEntryDate() {
 		return entryDate;
 	}
 
+	public void setGraceEndDate(long graceEndDate){
+		this.graceEndDate = graceEndDate;
+	}
+	
 	public long getGraceEndDate() {
 		return graceEndDate;
 	}

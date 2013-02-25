@@ -143,14 +143,6 @@ public class ClientController {
             }
         }
     }
-    
-    public static void registerImageListener(VehicleListener listener){
-        imageListeners.add(listener);
-    }
-    
-    public static void unRegisterImageListener(VehicleListener listener){
-        imageListeners.remove(listener);
-    }
         
     public static void registerDataListener(VehicleListener listener){
         dataListeners.add(listener);
@@ -165,40 +157,31 @@ public class ClientController {
         client.writeMessage("test".getBytes());
     }
     
-    public static void sendImageRequest(int index){
-        byte[] byteIndex = ByteBuffer.allocate(4).putInt(index).array();
-        byte[] packet = new byte[byteIndex.length + 1];
-
-        packet[0] = 'r';
-        System.arraycopy(byteIndex, 0, packet, 1, byteIndex.length);
-
-        client.writeMessage(packet);
-    }
-    
-    public static void searchImageRequest(String plateToSearch){
-        byte[] plateBytesRaw = plateToSearch.getBytes();
-        byte[] plateBytesFull = new byte[8];
-                    		
-        System.arraycopy(plateBytesRaw, 0, plateBytesFull, 0, plateBytesRaw.length); 
+    public static void searchRequest(String searchKey){
         
-        byte[] packet = new byte[plateBytesFull.length + 1];
-
+        if(!isConnected()){
+            return;
+        }
+        
+        byte[] searchKeyBytes = searchKey.getBytes();
+        byte[] packet = new byte[searchKeyBytes.length+2];
+        
         packet[0] = 's';
-        System.arraycopy(plateBytesFull, 0, packet, 1, plateBytesFull.length);
+        packet[1] = ' ';
+        
+        System.arraycopy(searchKeyBytes, 0, packet, 2, searchKeyBytes.length);
         client.writeMessage(packet);
     }
     
     public static void activeVehiclesRequest(){
+        
+        if(!isConnected()){
+            return;
+        }
+        
         byte[] packet = new byte[1];
         packet[0] = 'a';
         client.writeMessage(packet);
-    }
-    
-    public static void notifyImageListeners(Vehicle vehicle){
-        System.out.println("Notifying image listeners");
-        for(VehicleListener vl: imageListeners){
-            vl.onVehicleMessage(vehicle);
-        }
     }
     
     public static void notifyDataListeners(Vehicle vehicle){

@@ -4,75 +4,87 @@ import java.io.Serializable;
 
 public class Vehicle implements Serializable {
 
-    private static final long serialVersionUID = 6026628041263604534L;
-    public static int GraceQuantumMillis = 10000;
-    private String plateNumber;
-    private String lotNumber;
-    private long entryDate;
-    private long graceEndDate;
-    private byte[] imageBytes;
+	private static final long serialVersionUID = 6026628041263604534L;
 
-    public Vehicle() {
-        this.entryDate = System.currentTimeMillis();
+	public static int GraceQuantumMillis = 10000;
 
-        //Set the grace period end date to be entry date + grace period time amount
-        this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
-    }
+	private String plateNumber;
+	private String lotNumber;
+	private long entryDate;
+	private long graceEndDate;
+	private byte[] imageBytes;
 
-    public Vehicle(String plateNumber, String lotNumber) {
-        this.plateNumber = plateNumber;
-        this.lotNumber = lotNumber;
+	public Vehicle() {
+		this.entryDate = System.currentTimeMillis();
 
-        this.entryDate = System.currentTimeMillis();
+		// Set the grace period end date to be entry date + grace period time
+		// amount
+		this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
+	}
 
-        //Set the grace period end date to be entry date + grace period time amount
-        this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
+	public Vehicle(String plateNumber, String lotNumber) {
+		this.plateNumber = plateNumber;
+		this.lotNumber = lotNumber;
 
-    }
+		this.entryDate = System.currentTimeMillis();
 
-    public void setPlateNumber(String plateNumber) {
-        this.plateNumber = plateNumber;
-    }
+		// Set the grace period end date to be entry date + grace period time
+		// amount
+		this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
 
-    public String getPlateNumber() {
-        return plateNumber;
-    }
+	}
 
-    public void setLotNumber(String lotNumber) {
-        this.lotNumber = lotNumber;
-    }
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
 
-    public String getLotNumber() {
-        return lotNumber;
-    }
+	public String getPlateNumber() {
+		return plateNumber;
+	}
 
-    public long getEntryDate() {
-        return entryDate;
-    }
+	public void setLotNumber(String lotNumber) {
+		this.lotNumber = lotNumber;
+	}
 
-    public long getGraceEndDate() {
-        return graceEndDate;
-    }
+	public String getLotNumber() {
+		return lotNumber;
+	}
 
-    public byte[] getImageBytes() {
-        return imageBytes;
-    }
+	public void setEntryDate(long entryDate){
+		this.entryDate = entryDate;
+	}
+	
+	public long getEntryDate() {
+		return entryDate;
+	}
 
-    public void setImageBytes(byte[] imageBytes) {
-        this.imageBytes = imageBytes;
-    }
+	public void setGraceEndDate(long graceEndDate){
+		this.graceEndDate = graceEndDate;
+	}
+	
+	public long getGraceEndDate() {
+		return graceEndDate;
+	}
 
-    @Override
-    public String toString() {
-        return plateNumber + lotNumber;
-    }
+	public byte[] getImageBytes() {
+		return imageBytes;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o.toString().equals(this.toString())) {
-            return true;
-        }
+	public void setImageBytes(byte[] imageBytes) {
+		this.imageBytes = imageBytes;
+	}
 
-        return false;
-    }
+	@Override
+	public String toString() {
+		return plateNumber + lotNumber;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o.toString().equals(this.toString())) {
+			return true;
+		}
+
+		return false;
+	}
 }

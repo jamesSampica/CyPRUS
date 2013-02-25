@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tableModels;
 
 import java.text.DateFormat;
@@ -15,7 +12,7 @@ import support.Vehicle;
  *
  * @author James
  */
-public class RecentVehicleDataModel extends AbstractTableModel {
+public class SearchVehicleDataModel extends AbstractTableModel {
     
     public static int PlateNumberColumn = 0;
     public static int LotNumberColumn = 1;
@@ -24,7 +21,7 @@ public class RecentVehicleDataModel extends AbstractTableModel {
     private ArrayList<Vehicle> vehicles;
     private SimpleDateFormat rowDateFormatter;
     
-    public RecentVehicleDataModel(){
+    public SearchVehicleDataModel(){
         vehicles = new ArrayList();
         rowDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
@@ -62,11 +59,6 @@ public class RecentVehicleDataModel extends AbstractTableModel {
     }
     
     public void addRow(Vehicle vehicle) {
-
-        //This list has a cap of 50
-        if (vehicles.size() >= 50) {
-            removeRow(vehicles.get(vehicles.size() - 1));
-        }
         vehicles.add(0, vehicle);
         int row = vehicles.indexOf(vehicle);
         fireTableRowsInserted(row, row);
@@ -76,5 +68,10 @@ public class RecentVehicleDataModel extends AbstractTableModel {
         int row = vehicles.indexOf(vehicle);
         vehicles.remove(vehicle);
         fireTableRowsDeleted(row, row);
+    }
+    
+    public void clearData(){
+        vehicles.clear();
+        this.fireTableDataChanged();
     }
 }

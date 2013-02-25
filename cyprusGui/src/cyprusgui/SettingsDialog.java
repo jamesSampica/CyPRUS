@@ -100,6 +100,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         try{
             int newPort = Integer.parseInt(portTextField.getText());
             ClientController.setPortSettings(newPort);
+            ClientController.activeVehiclesRequest();
             this.setVisible(false);
         }
         catch(NumberFormatException e){

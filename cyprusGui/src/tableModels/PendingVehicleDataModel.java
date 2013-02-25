@@ -4,9 +4,13 @@
  */
 package tableModels;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import support.Vehicle;
 
@@ -20,12 +24,32 @@ public class PendingVehicleDataModel extends AbstractTableModel {
     public static int LotNumberColumn = 1;
     public static int TimeRemainingColumn = 2;
     public static int DateEnteredColumn = 3;
+    
     private volatile ArrayList<Vehicle> vehicles;
     private RecentVehicleDataModel recentDataModel;
+    private Timer gracePeriodTimer; 
+    private SimpleDateFormat rowDateFormatter;
 
-    public PendingVehicleDataModel(RecentVehicleDataModel recentDataModel) {
+    public PendingVehicleDataModel(RecentVehicleDataModel recentModel) {
         vehicles = new ArrayList();
-        this.recentDataModel = recentDataModel;
+        recentDataModel = recentModel;
+        
+        ActionListener taskPerformer = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if(vehicles.size() > 0 
+                        && vehicles.get(0).getGraceEndDate() - System.currentTimeMillis() <= 0){
+                    recentDataModel.addRow(vehicles.get(0));
+                    vehicles.remove(vehicles.get(0));
+                    
+                }
+            }
+            };
+        gracePeriodTimer = new Timer( 100 , taskPerformer);
+        gracePeriodTimer.setRepeats(true);
+        gracePeriodTimer.start();
+
+        rowDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
 
     @Override
@@ -51,17 +75,11 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         } else if (columnIndex == LotNumberColumn) {
             return selectedVehicle.getLotNumber();
         } else if (columnIndex == TimeRemainingColumn) {
-            fireTableDataChanged();
-            if (selectedVehicle.getGraceEndDate() - System.currentTimeMillis() <= 0) {
-                //if (vehicles.contains(selectedVehicle)) {
-                    //removeRow(selectedVehicle);
-                //}
-                //return 0;
-            }
-            return selectedVehicle.getGraceEndDate() - System.currentTimeMillis();
+                fireTableDataChanged();
+                return selectedVehicle.getGraceEndDate() - System.currentTimeMillis();
         }
 
-        return DateFormat.getDateInstance().format(new Date(selectedVehicle.getEntryDate()));
+        return rowDateFormatter.format(new Date(selectedVehicle.getEntryDate()));
     }
 
     public Vehicle getRow(int rowIndex) {
@@ -72,9 +90,6 @@ public class PendingVehicleDataModel extends AbstractTableModel {
     public void addRow(Vehicle vehicle) {
         vehicles.add(vehicle);
         int row = vehicles.indexOf(vehicle);
-        for (int column = 0; column < 4; column++) {
-            fireTableCellUpdated(row, column);
-        }
         fireTableRowsInserted(row, row);
     }
 
@@ -82,18 +97,7 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         int row = vehicles.indexOf(vehicle);
         vehicles.remove(vehicle);
         recentDataModel.addRow(vehicle);
-        for (int column = 0; column < 4; column++) {
-            fireTableCellUpdated(row, column);
-        }
-        this.fireTableRowsDeleted(row, row);
-    }
-    
-    public void removeRowByPlateAndLot(String plateNumber, String lotNumber){   
-        for(Vehicle v: vehicles){
-            if(v.getPlateNumber().equals(plateNumber) && v.getLotNumber().equals(lotNumber)){
-                removeRow(v);
-            }
-        }
+        fireTableRowsDeleted(row, row);
     }
     
     public boolean contains(Vehicle vehicle){

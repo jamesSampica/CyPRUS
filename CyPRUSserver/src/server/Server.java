@@ -113,7 +113,7 @@ public class Server {
 						System.out.println("Violation detected");
 						
 						//Store that plate/lot combo in db
-						//JDBCDatabase.getDatabase().storeParkingOffense(plateAndLot[0], plateAndLot[1]);
+						JDBCDatabase.getDatabase().storeParkingViolation(capturedVehicle);
 						
 						activeVehicles.remove(capturedVehicle);
 					}

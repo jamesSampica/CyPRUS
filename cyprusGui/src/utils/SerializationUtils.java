@@ -7,19 +7,20 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import support.Vehicle;
+
+import support.Packet;
 
 public class SerializationUtils {
 	
 	
-	public static byte[] vehicleToBytes(Object object){
+	public static byte[] packetToBytes(Packet object){
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutput out = null;
-		byte[] vehicleBytes = null;
+		byte[] packetBytes = null;
 		try {
 		  out = new ObjectOutputStream(bos);   
 		  out.writeObject(object);
-		  vehicleBytes = bos.toByteArray();
+		  packetBytes = bos.toByteArray();
 		  out.close();
 		  bos.close();
 		} catch (IOException e) {
@@ -27,22 +28,21 @@ public class SerializationUtils {
 			e.printStackTrace();
 		}
 		
-		return vehicleBytes;
+		return packetBytes;
 	}
 
 	
-	public static Object bytesToVehicle(byte[] objectBytes){
+	public static Packet bytesToPacket(byte[] objectBytes){
 		ByteArrayInputStream bis = new ByteArrayInputStream(objectBytes);
 		ObjectInput in = null;
-		Vehicle o = null;
+		Packet o = null;
 		try {
 		  in = new ObjectInputStream(bis);
-		  o = (Vehicle) in.readObject(); 
+		  o = (Packet) in.readObject(); 
 		  bis.close();
 		  in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Possible problem converting bytes vehicle");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

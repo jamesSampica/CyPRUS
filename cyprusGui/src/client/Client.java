@@ -1,7 +1,7 @@
 package client;
 
 import support.BaseMessageClient;
-import support.Vehicle;
+import support.Packet;
 import utils.SerializationUtils;
 
 public class Client extends BaseMessageClient {
@@ -13,10 +13,10 @@ public class Client extends BaseMessageClient {
 
     @Override
     public void onMessage(byte[] message) {
-        Vehicle vehicleRead = (Vehicle)SerializationUtils.bytesToVehicle(message);
+        Packet packetRead = SerializationUtils.bytesToPacket(message);
 
         System.out.println("Receiving data");
-        ClientController.notifyDataListeners(vehicleRead);
+        ClientController.notifyDataListeners(packetRead);
     }
 
     

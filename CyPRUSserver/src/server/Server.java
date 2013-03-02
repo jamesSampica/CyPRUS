@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ServerSocketFactory;
 
+import support.Packet;
 import support.Vehicle;
 import utils.SerializationUtils;
 
@@ -24,9 +25,9 @@ public class Server {
 	private volatile boolean connected = true;
 
 	//Threaded
-	private volatile List<ServerClient> clients = Collections.synchronizedList(new ArrayList<ServerClient>());
+	private volatile List<ServerClient> clients;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	private volatile ArrayList<Vehicle> activeVehicles;
+	private volatile List<Vehicle> activeVehicles;
 	private volatile ServerSocket server;
 
 	private int port;
@@ -35,7 +36,9 @@ public class Server {
 		try {
 			this.port = port;
 			
-			activeVehicles = new ArrayList<Vehicle>();
+			clients = Collections.synchronizedList(new ArrayList<ServerClient>());
+			activeVehicles = Collections.synchronizedList(new ArrayList<Vehicle>());
+			
 			JDBCDatabase.setupJDBCDatabase(dbUserName,dbPassword);
 
 		    ServerSocketFactory ssf = (ServerSocketFactory) ServerSocketFactory.getDefault();
@@ -125,22 +128,30 @@ public class Server {
 		}
 		
 		//serialize vehicle to send
-		byte[] vehicleBytes = SerializationUtils.vehicleToBytes(capturedVehicle);
+		Packet toSend = new Packet(Packet.CapturedVehicleCommand);
+		toSend.setVehicle(capturedVehicle);
+		byte[] packetBytes = SerializationUtils.packetToBytes(toSend);
 		
 		//send data to all clients
 		for(ServerClient sc: clients){
 			if(sc.getWriter().isConnected() && sc.getReader().isConnected()){
-				sc.writeMessage(vehicleBytes);
+				sc.writeMessage(packetBytes);
 			}
 		}
 	}
 
 	public void processActiveVehiclesRequest(ServerClient requester){
-		for(Vehicle activeVehicle: activeVehicles){
-			//serialize vehicle to send
-			byte[] vehicleBytes = SerializationUtils.vehicleToBytes(activeVehicle);
-			
-			requester.writeMessage(vehicleBytes);
+		
+		synchronized(activeVehicles){
+			for(Vehicle activeVehicle: activeVehicles){
+				
+				//serialize vehicle to send
+				Packet toSend = new Packet(Packet.ActiveVehiclesCommand);
+				toSend.setVehicle(activeVehicle);
+				byte[] packetBytes = SerializationUtils.packetToBytes(toSend);
+				
+				requester.writeMessage(packetBytes);
+			}
 		}
 	}
 }

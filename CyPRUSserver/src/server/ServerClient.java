@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import database.JDBCDatabase;
 
 import support.BaseMessageClient;
+import support.Packet;
 import support.Vehicle;
 import utils.SerializationUtils;
 import utils.VehicleImageUtils;
@@ -25,16 +26,28 @@ public class ServerClient extends BaseMessageClient {
 	@Override
 	public void onMessage(byte[] message) {
 		
+		Packet packet = SerializationUtils.bytesToPacket(message);
+		
+		if(packet != null && packet.getCommand() == Packet.ActiveVehiclesCommand){
+			processActiveVehiclesRequest();
+		}
+		else if(packet != null && packet.getCommand() == Packet.SearchCommand){
+			processSearchRequest(packet);
+		}
+		else{
+			processImageReceive(message);
+		}
+		
 		//s is search
 		if(message[0] == 's'){
-			processSearchRequest(message);
+			
 		}
 		else if(message[0] == 'a'){
-			processActiveVehiclesRequest();
+			
 		}
 		//else if(message[0] == 0xFF){
 		else{
-			processImageReceive(message);
+			
 		}
 	}
 
@@ -42,16 +55,15 @@ public class ServerClient extends BaseMessageClient {
 		this.server.processActiveVehiclesRequest(this);
 	}
 	
-	private void processSearchRequest(byte[] message){
-
-		String commandAndKey = new String(message);
-		String[] commandAndKeyArray = commandAndKey.split(" ");
+	private void processSearchRequest(Packet message){
 		
-		if(commandAndKeyArray.length >= 2){
-			ArrayList<Vehicle> queryResult = JDBCDatabase.getDatabase().queryVehicleViolations(commandAndKeyArray[1]);
+		if(!message.getSearchString().isEmpty()){
+			ArrayList<Vehicle> queryResult = JDBCDatabase.getDatabase().queryVehicleViolations(message.getSearchString());
 			for(Vehicle v: queryResult){
-				byte[] vehicleBytes = SerializationUtils.vehicleToBytes(v);
-				writeMessage(vehicleBytes);
+				Packet toSend = new Packet(Packet.SearchCommand);
+				toSend.setVehicle(v);
+				byte[] packetBytes = SerializationUtils.packetToBytes(toSend);
+				writeMessage(packetBytes);
 			}
 		}
 	}

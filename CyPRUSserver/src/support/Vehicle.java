@@ -1,6 +1,7 @@
 package support;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Vehicle implements Serializable {
 
@@ -10,27 +11,27 @@ public class Vehicle implements Serializable {
 
 	private String plateNumber;
 	private String lotNumber;
-	private long entryDate;
-	private long graceEndDate;
+	private Date entryDate;
+	private Date graceEndDate;
 	private byte[] imageBytes;
 
 	public Vehicle() {
-		this.entryDate = System.currentTimeMillis();
+		this.entryDate = new Date(System.currentTimeMillis());
 
 		// Set the grace period end date to be entry date + grace period time
 		// amount
-		this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
+		this.graceEndDate = new Date(System.currentTimeMillis() + GraceQuantumMillis);
 	}
 
 	public Vehicle(String plateNumber, String lotNumber) {
 		this.plateNumber = plateNumber;
 		this.lotNumber = lotNumber;
 
-		this.entryDate = System.currentTimeMillis();
+		this.entryDate = new Date(System.currentTimeMillis());
 
 		// Set the grace period end date to be entry date + grace period time
 		// amount
-		this.graceEndDate = System.currentTimeMillis() + GraceQuantumMillis;
+		this.graceEndDate = new Date(System.currentTimeMillis() + GraceQuantumMillis);
 
 	}
 
@@ -50,19 +51,19 @@ public class Vehicle implements Serializable {
 		return lotNumber;
 	}
 
-	public void setEntryDate(long entryDate){
+	public void setEntryDate(Date entryDate){
 		this.entryDate = entryDate;
 	}
 	
-	public long getEntryDate() {
+	public Date getEntryDate() {
 		return entryDate;
 	}
 
-	public void setGraceEndDate(long graceEndDate){
+	public void setGraceEndDate(Date graceEndDate){
 		this.graceEndDate = graceEndDate;
 	}
 	
-	public long getGraceEndDate() {
+	public Date getGraceEndDate() {
 		return graceEndDate;
 	}
 

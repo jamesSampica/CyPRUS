@@ -51,7 +51,7 @@ public class SearchVehicleDataModel extends AbstractTableModel {
             return selectedVehicle.getLotNumber();
         }
         
-        return rowDateFormatter.format(new Date(selectedVehicle.getGraceEndDate()));
+        return rowDateFormatter.format(selectedVehicle.getGraceEndDate());
     }
     
     public Vehicle getRow(int rowIndex){

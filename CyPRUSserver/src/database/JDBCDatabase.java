@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+
 import support.Vehicle;
 import utils.VehicleImageUtils;
 
@@ -49,7 +51,7 @@ public class JDBCDatabase {
 			Connection connection = DriverManager.getConnection(url);
 			StringBuilder sb = new StringBuilder();
 
-			Timestamp violationDate = new Timestamp(vehicle.getGraceEndDate());
+			Timestamp violationDate = new Timestamp(vehicle.getGraceEndDate().getTime());
 
 			sb.append("insert into vehicle_violations");
 			sb.append("(platenumber, lotnumber, violationdate) ");
@@ -91,9 +93,8 @@ public class JDBCDatabase {
 				Vehicle v = new Vehicle();
 				Timestamp violationDate = rs.getTimestamp("violationdate");
 				if(violationDate != null){
-					v.setEntryDate(violationDate.getTime());
+					v.setEntryDate(new Date(violationDate.getTime()));
 				}
-				v.setGraceEndDate(0);
 				v.setLotNumber(rs.getString("lotnumber"));
 				v.setPlateNumber(rs.getString("platenumber"));
 				

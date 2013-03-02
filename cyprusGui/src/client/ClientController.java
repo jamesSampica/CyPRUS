@@ -4,39 +4,50 @@
  */
 package client;
 
+import interfaces.PacketListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import support.Vehicle;
-import support.VehicleListener;
+import support.Packet;
+import utils.SerializationUtils;
 
 /**
  *
  * @author James
+ * This class acts as a controller between the GUI and the client socket.
+ * All commands that come in or go out are intended to go through this class.
+ * This class uses static methods so that any GUI component can send and receive
+ * messages
  */
 public class ClientController {
     
     private static Client client;
     
-    private static ArrayList<VehicleListener> imageListeners;
-    private static ArrayList<VehicleListener> dataListeners;
+    private static ArrayList<PacketListener> dataListeners;
    
     
     private ClientController(){
 
     }
 
+    /**
+     * Should be called prior to any network calls. Sets up the client using
+     * the stored server settings such that messages can be sent and received.
+     */
     public static void setup(){
         setupClientFromSettings(-1);
-        imageListeners = new ArrayList<>();
         dataListeners = new ArrayList<>();
     }
     
+    
+    /**
+     * Writes the port setting to the settings file
+     * @param newPort desired port to set 
+     */
     public static void setPortSettings(int newPort){
         if(client != null){
             client.disconnect();
@@ -64,6 +75,10 @@ public class ClientController {
         }
     }
     
+    /**
+     * Retrieves the port setting from the settings file
+     * @return settings level port
+     */
     public static int getPortSettings(){
         if(client != null){
             return client.getSocket().getPort();
@@ -97,6 +112,10 @@ public class ClientController {
         return port;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public static boolean isConnected(){
         if(client == null){
             return false;
@@ -144,16 +163,17 @@ public class ClientController {
         }
     }
         
-    public static void registerDataListener(VehicleListener listener){
+    public static void registerDataListener(PacketListener listener){
         dataListeners.add(listener);
     }
             
-    public static void unRegisterDataListener(VehicleListener listener){
+    public static void unRegisterDataListener(PacketListener listener){
         dataListeners.remove(listener);
     }
     
     //test code
     public static void test(){
+        // Packet p = new Packet(Packet.ActiveVehiclesCommand);
         client.writeMessage("test".getBytes());
     }
     
@@ -163,14 +183,11 @@ public class ClientController {
             return;
         }
         
-        byte[] searchKeyBytes = searchKey.getBytes();
-        byte[] packet = new byte[searchKeyBytes.length+2];
+        Packet toSend = new Packet(Packet.SearchCommand);
+        toSend.setSearchString(searchKey);
+        byte[] bytesToSend = SerializationUtils.packetToBytes(toSend);
         
-        packet[0] = 's';
-        packet[1] = ' ';
-        
-        System.arraycopy(searchKeyBytes, 0, packet, 2, searchKeyBytes.length);
-        client.writeMessage(packet);
+        client.writeMessage(bytesToSend);
     }
     
     public static void activeVehiclesRequest(){
@@ -179,15 +196,16 @@ public class ClientController {
             return;
         }
         
-        byte[] packet = new byte[1];
-        packet[0] = 'a';
-        client.writeMessage(packet);
+        Packet toSend = new Packet(Packet.ActiveVehiclesCommand);
+        byte[] bytesToSend = SerializationUtils.packetToBytes(toSend);
+        
+        client.writeMessage(bytesToSend);
     }
     
-    public static void notifyDataListeners(Vehicle vehicle){
+    public static void notifyDataListeners(Packet message){
         System.out.println("Notifying data listeners");
-        for(VehicleListener vl: dataListeners){
-            vl.onVehicleMessage(vehicle);
+        for(PacketListener vl: dataListeners){
+            vl.onPacketReceived(message);
         }
     }
 }

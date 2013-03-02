@@ -38,7 +38,7 @@ public class PendingVehicleDataModel extends AbstractTableModel {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 if(vehicles.size() > 0 
-                        && vehicles.get(0).getGraceEndDate() - System.currentTimeMillis() <= 0){
+                        && vehicles.get(0).getGraceEndDate().getTime() - System.currentTimeMillis() <= 0){
                     recentDataModel.addRow(vehicles.get(0));
                     vehicles.remove(vehicles.get(0));
                     
@@ -76,10 +76,10 @@ public class PendingVehicleDataModel extends AbstractTableModel {
             return selectedVehicle.getLotNumber();
         } else if (columnIndex == TimeRemainingColumn) {
                 fireTableDataChanged();
-                return selectedVehicle.getGraceEndDate() - System.currentTimeMillis();
+                return selectedVehicle.getGraceEndDate().getTime() - System.currentTimeMillis();
         }
 
-        return rowDateFormatter.format(new Date(selectedVehicle.getEntryDate()));
+        return rowDateFormatter.format(selectedVehicle.getEntryDate());
     }
 
     public Vehicle getRow(int rowIndex) {

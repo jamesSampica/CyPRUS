@@ -18,7 +18,8 @@ public class SettingsDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        portTextField.setText(String.valueOf(ClientController.getPortSettings()));
+        portTextField.setText(String.valueOf(ClientController.getServerPort()));
+        ipTextField.setText(ClientController.getServerIP());
         
         //Handle window closing correctly.
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -36,6 +37,8 @@ public class SettingsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         portTextField = new javax.swing.JTextField();
+        ipTextField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Settings");
@@ -56,6 +59,8 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         jLabel1.setText("Server Port:");
 
+        jLabel2.setText("Server IP:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -63,15 +68,19 @@ public class SettingsDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(portTextField))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 111, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)))
+                        .addComponent(cancelButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ipTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(portTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -83,13 +92,17 @@ public class SettingsDialog extends javax.swing.JDialog {
                     .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-265)/2, (screenSize.height-109)/2, 265, 109);
+        setBounds((screenSize.width-229)/2, (screenSize.height-155)/2, 229, 155);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -97,20 +110,25 @@ public class SettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        try{
+        try {
             int newPort = Integer.parseInt(portTextField.getText());
-            ClientController.setPortSettings(newPort);
-            ClientController.activeVehiclesRequest();
-            this.setVisible(false);
-        }
-        catch(NumberFormatException e){
-            
+
+            if (!ipTextField.getText().isEmpty() && newPort > 0) {
+                ClientController.disconnectClient();
+                ClientController.setupFromArguments(ipTextField.getText(), newPort);
+                ClientController.activeVehiclesRequest();
+                ClientController.recentVehiclesRequest();
+                this.setVisible(false);
+            }
+        } catch (NumberFormatException e) {
         }
     }//GEN-LAST:event_okButtonActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JTextField ipTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JButton okButton;
     private javax.swing.JTextField portTextField;
     // End of variables declaration//GEN-END:variables

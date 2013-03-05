@@ -53,7 +53,6 @@ public class MessageReader implements Runnable {
 		}
 		catch (Exception e) {
 			this.client.errorOnRead(e);
-			//System.out.println("Encountered Read Error");
 		}
 
 	}

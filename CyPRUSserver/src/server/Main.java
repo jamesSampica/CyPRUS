@@ -1,17 +1,12 @@
 package server;
 
 import java.io.Console;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    private static Console console;
 
 	public static void main(String[] args) {
-    	//console = System.console();
-	    if (console == null) {
-	        System.out.println("Couldn't get Console instance");
-	        //System.exit(0);
-	    }
 	    
 	    Scanner s = new Scanner(System.in);
 	    final Server server = createServerFromInputs(s);
@@ -44,8 +39,20 @@ public class Main {
 		s.close();
 	}
 	private static Server createServerFromInputs(Scanner s){
-		System.out.print("What port would you like to listen on? ");
-		int port = s.nextInt();
+		
+		int port = 0;
+		boolean notValid = true;
+		while(notValid){
+			System.out.print("What port would you like to listen on? ");
+			try{
+				String temp = s.next();
+				port = Integer.valueOf(temp);
+				notValid = false;
+			}
+			catch(NumberFormatException e){
+				
+			}
+		}
 		
 		System.out.print("What is your database username? ");
 		String userName = s.next();

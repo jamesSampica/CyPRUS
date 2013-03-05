@@ -77,4 +77,9 @@ public class RecentVehicleDataModel extends AbstractTableModel {
         vehicles.remove(vehicle);
         fireTableRowsDeleted(row, row);
     }
+    
+    public void clearData(){
+        vehicles.clear();
+        this.fireTableDataChanged();
+    }
 }

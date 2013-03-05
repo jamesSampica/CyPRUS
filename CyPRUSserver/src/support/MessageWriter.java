@@ -36,13 +36,7 @@ public class MessageWriter implements Runnable {
 	public void run() {
 
 		while ( this.isConnected() ) {
-			try {/*
-				String message = this.queue.poll( 1 , TimeUnit.SECONDS);
-				if ( message != null ) {
-					byte[] bytes = message.getBytes();
-					this.stream.writeInt( bytes.length );
-					this.stream.write( bytes );
-				}*/
+			try {
 				byte[] message = this.queue.poll( 1 , TimeUnit.SECONDS);
 				if ( message != null ) {
 					this.stream.writeInt( message.length );

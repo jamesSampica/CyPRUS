@@ -67,12 +67,13 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         jScrollPane4 = new javax.swing.JScrollPane();
         pendingTable = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        pendingRefreshButton = new javax.swing.JButton();
         recentViolationsPanel = new javax.swing.JPanel();
         recentFilterTextInput = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
         recentTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        recentRefreshButton = new javax.swing.JButton();
         searchPanel = new javax.swing.JPanel();
         searchButton = new javax.swing.JButton();
         searchTextInput = new javax.swing.JTextField();
@@ -124,7 +125,12 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         jLabel11.setText("Filter:");
 
-        jButton1.setText("jButton1");
+        pendingRefreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refreshIcon.png"))); // NOI18N
+        pendingRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pendingRefreshButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout vehiclesPendingPanelLayout = new javax.swing.GroupLayout(vehiclesPendingPanel);
         vehiclesPendingPanel.setLayout(vehiclesPendingPanelLayout);
@@ -136,21 +142,22 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pendingRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
         );
         vehiclesPendingPanelLayout.setVerticalGroup(
             vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
                     .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11))
+                    .addComponent(pendingRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Vehicles Pending", vehiclesPendingPanel);
@@ -171,6 +178,13 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         jLabel1.setText("Filter:");
 
+        recentRefreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refreshIcon.png"))); // NOI18N
+        recentRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recentRefreshButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout recentViolationsPanelLayout = new javax.swing.GroupLayout(recentViolationsPanel);
         recentViolationsPanel.setLayout(recentViolationsPanelLayout);
         recentViolationsPanelLayout.setHorizontalGroup(
@@ -180,18 +194,23 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(recentFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(275, Short.MAX_VALUE))
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(recentRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
         );
         recentViolationsPanelLayout.setVerticalGroup(
             recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recentViolationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(recentFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(recentFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addComponent(recentRefreshButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Recent Violations", recentViolationsPanel);
@@ -325,7 +344,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 
-        ClientController.setup();
+        ClientController.setupFromFileSettings();
         ClientController.registerDataListener(this);
 
         
@@ -336,6 +355,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         ClientController.test();
         //ClientController.activeVehiclesRequest();
+        ClientController.recentVehiclesRequest();
 
     }//GEN-LAST:event_formWindowOpened
 
@@ -353,6 +373,16 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
             ClientController.searchRequest(searchTextInput.getText());
         }
     }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void pendingRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pendingRefreshButtonActionPerformed
+        ((PendingVehicleDataModel)pendingTable.getModel()).clearData();
+        ClientController.activeVehiclesRequest();
+    }//GEN-LAST:event_pendingRefreshButtonActionPerformed
+
+    private void recentRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recentRefreshButtonActionPerformed
+        ((RecentVehicleDataModel)recentTable.getModel()).clearData();
+        ClientController.recentVehiclesRequest();
+    }//GEN-LAST:event_recentRefreshButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -420,7 +450,12 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
             @Override
             public void run() {
                 Vehicle packetVehicle = packet.getVehicle();
-                if(packetVehicle != null && packet.getCommand() == Packet.CapturedVehicleCommand){
+                
+                if(packetVehicle == null){
+                    return;
+                }
+                
+                if(packet.getCommand() == Packet.CapturedVehicleCommand){
                     //If the model doesnt contain it then its a new vehicle
                     if (!pendingModel.contains(packetVehicle)) {
                         pendingModel.addRow(packetVehicle);
@@ -431,11 +466,14 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
                         pendingModel.removeRow(packetVehicle);
                     }
                 }
-                else if(packetVehicle != null && packet.getCommand() == Packet.ActiveVehiclesCommand){
+                else if(packet.getCommand() == Packet.ActiveVehiclesCommand){
                     pendingModel.addRow(packetVehicle);
                 }
-                else if(packetVehicle != null && packet.getCommand() == Packet.SearchCommand){
+                else if(packet.getCommand() == Packet.SearchCommand){
                     searchModel.addRow(packetVehicle);
+                }
+                else if(packet.getCommand() == Packet.RecentVehiclesCommand){
+                    recentModel.addRow(packetVehicle);
                 }
                 
             }
@@ -667,7 +705,6 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JMenuBar jMenuBar1;
@@ -678,9 +715,11 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.ButtonGroup pendingButtonGroup;
     private javax.swing.JTextField pendingFilterTextInput;
+    private javax.swing.JButton pendingRefreshButton;
     private javax.swing.JTable pendingTable;
     private javax.swing.ButtonGroup recentButtonGroup;
     private javax.swing.JTextField recentFilterTextInput;
+    private javax.swing.JButton recentRefreshButton;
     private javax.swing.JTable recentTable;
     private javax.swing.JPanel recentViolationsPanel;
     private javax.swing.JButton searchButton;

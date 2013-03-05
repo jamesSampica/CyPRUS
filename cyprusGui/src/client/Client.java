@@ -16,7 +16,7 @@ public class Client extends BaseMessageClient {
         Packet packetRead = SerializationUtils.bytesToPacket(message);
 
         System.out.println("Receiving data");
-        ClientController.notifyDataListeners(packetRead);
+        ClientController.notifyPacketListeners(packetRead);
     }
 
     

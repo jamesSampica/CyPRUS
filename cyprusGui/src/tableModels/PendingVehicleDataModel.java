@@ -107,4 +107,9 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         
         return false;
     }
+    
+    public void clearData(){
+        vehicles.clear();
+        this.fireTableDataChanged();
+    }
 }

@@ -7,7 +7,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +16,7 @@ import javax.net.ServerSocketFactory;
 import support.Packet;
 import support.Vehicle;
 import utils.SerializationUtils;
+import utils.VehicleImageUtils;
 
 import database.JDBCDatabase;
 
@@ -28,6 +28,7 @@ public class Server {
 	private volatile List<ServerClient> clients;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private volatile List<Vehicle> activeVehicles;
+	private volatile List<Vehicle> recentVehicles;
 	private volatile ServerSocket server;
 
 	private int port;
@@ -38,6 +39,7 @@ public class Server {
 			
 			clients = Collections.synchronizedList(new ArrayList<ServerClient>());
 			activeVehicles = Collections.synchronizedList(new ArrayList<Vehicle>());
+			recentVehicles = Collections.synchronizedList(new ArrayList<Vehicle>());
 			
 			JDBCDatabase.setupJDBCDatabase(dbUserName,dbPassword);
 
@@ -117,8 +119,10 @@ public class Server {
 						
 						//Store that plate/lot combo in db
 						JDBCDatabase.getDatabase().storeParkingViolation(capturedVehicle);
+						VehicleImageUtils.saveImageBytesForVehicle(capturedVehicle);
 						
 						activeVehicles.remove(capturedVehicle);
+						recentVehicles.add(recentVehicles.size(), capturedVehicle);
 					}
 				}
 			}, Vehicle.GraceQuantumMillis, TimeUnit.MILLISECONDS);
@@ -141,13 +145,24 @@ public class Server {
 	}
 
 	public void processActiveVehiclesRequest(ServerClient requester){
-		
 		synchronized(activeVehicles){
 			for(Vehicle activeVehicle: activeVehicles){
-				
 				//serialize vehicle to send
 				Packet toSend = new Packet(Packet.ActiveVehiclesCommand);
 				toSend.setVehicle(activeVehicle);
+				byte[] packetBytes = SerializationUtils.packetToBytes(toSend);
+				
+				requester.writeMessage(packetBytes);
+			}
+		}
+	}
+	
+	public void processRecentVehiclesRequest(ServerClient requester){
+		synchronized(recentVehicles){
+			for(Vehicle recentVehicle: recentVehicles){
+				//serialize vehicle to send
+				Packet toSend = new Packet(Packet.RecentVehiclesCommand);
+				toSend.setVehicle(recentVehicle);
 				byte[] packetBytes = SerializationUtils.packetToBytes(toSend);
 				
 				requester.writeMessage(packetBytes);

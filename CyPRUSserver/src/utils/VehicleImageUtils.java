@@ -1,8 +1,19 @@
 package utils;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
+
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
@@ -48,12 +59,27 @@ public class VehicleImageUtils {
     
     public static boolean getImageFileBytesForVehicle(Vehicle v) {
     	
-    	
+    	try {
+    		Path imagePath = Paths.get(v.getPlateNumber()+v.getLotNumber()+v.getGraceEndDate().getTime()+".jpg");
+			v.setImageBytes(Files.readAllBytes(imagePath));
+		} catch (Exception e) {
+			return false;
+		}
     	
     	return true;
     }
     
     public static boolean saveImageBytesForVehicle(Vehicle v){
+    	
+    	try {
+    	    // retrieve image
+    		InputStream in = new ByteArrayInputStream(v.getImageBytes());
+    	    BufferedImage bi = ImageIO.read(in);
+    	    File outputfile = new File(v.getPlateNumber()+v.getLotNumber()+v.getEntryDate().getTime()+".jpg");
+    	    ImageIO.write(bi, "jpg", outputfile);
+    	} catch (IOException e) {
+    	    return false;
+    	}
     	
     	return true;
     }

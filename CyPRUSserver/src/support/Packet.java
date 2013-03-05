@@ -9,15 +9,14 @@ public class Packet implements Serializable {
 	public static int SearchCommand = 0;
 	public static int ActiveVehiclesCommand = 1;
 	public static int RecentVehiclesCommand = 2;
-	public static int PingCommand = 3;
-	public static int CapturedVehicleCommand = 4;
+	public static int CapturedVehicleCommand = 3;
 	
 	private int command;
 	private String searchString;
 	private Vehicle vehicle;
 	
 	public Packet(int command){
-		if(command > 4 || command < 0){
+		if(command > 3 || command < 0){
 			throw new RuntimeException("Command doesnt exist");
 		}
 		

@@ -28,27 +28,19 @@ public class ServerClient extends BaseMessageClient {
 		
 		Packet packet = SerializationUtils.bytesToPacket(message);
 		
-		if(packet != null && packet.getCommand() == Packet.ActiveVehiclesCommand){
-			processActiveVehiclesRequest();
-		}
-		else if(packet != null && packet.getCommand() == Packet.SearchCommand){
-			processSearchRequest(packet);
-		}
-		else{
+		if(packet == null){
 			processImageReceive(message);
 		}
+		else if(packet.getCommand() == Packet.ActiveVehiclesCommand){
+			processActiveVehiclesRequest();
+		}
+		else if(packet.getCommand() == Packet.SearchCommand){
+			processSearchRequest(packet);
+		}
+		else if(packet.getCommand() == Packet.RecentVehiclesCommand){
+			this.server.processRecentVehiclesRequest(this);
+		}
 		
-		//s is search
-		if(message[0] == 's'){
-			
-		}
-		else if(message[0] == 'a'){
-			
-		}
-		//else if(message[0] == 0xFF){
-		else{
-			
-		}
 	}
 
 	private void processActiveVehiclesRequest(){

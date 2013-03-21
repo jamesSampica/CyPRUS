@@ -18,7 +18,7 @@ public class AboutForm extends javax.swing.JDialog {
         initComponents();
         
          //Handle window closing correctly.
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**

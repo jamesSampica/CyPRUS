@@ -5,8 +5,10 @@ import client.ClientController;
 import interfaces.PacketListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -58,9 +60,6 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pendingButtonGroup = new javax.swing.ButtonGroup();
-        searchButtonGroup = new javax.swing.ButtonGroup();
-        recentButtonGroup = new javax.swing.ButtonGroup();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         vehiclesPendingPanel = new javax.swing.JPanel();
         pendingFilterTextInput = new javax.swing.JTextField();
@@ -88,23 +87,24 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        datePassMenuItem = new javax.swing.JMenuItem();
+        timePassMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CyPRUS");
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
         });
 
+        jTabbedPane2.setBackground(new java.awt.Color(88, 88, 88));
         jTabbedPane2.setFocusable(false);
+
+        jScrollPane4.setBackground(new java.awt.Color(88, 88, 88));
 
         pendingTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -126,6 +126,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         jLabel11.setText("Filter:");
 
         pendingRefreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/refreshIcon.png"))); // NOI18N
+        pendingRefreshButton.setToolTipText("Refresh");
         pendingRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pendingRefreshButtonActionPerformed(evt);
@@ -136,28 +137,26 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         vehiclesPendingPanel.setLayout(vehiclesPendingPanelLayout);
         vehiclesPendingPanelLayout.setHorizontalGroup(
             vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, vehiclesPendingPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
                 .addComponent(pendingRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         vehiclesPendingPanelLayout.setVerticalGroup(
             vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vehiclesPendingPanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
                 .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pendingRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, vehiclesPendingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(pendingFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel11))
-                    .addComponent(pendingRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel11)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Vehicles Pending", vehiclesPendingPanel);
@@ -202,14 +201,13 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         recentViolationsPanelLayout.setVerticalGroup(
             recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(recentViolationsPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(recentRefreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, recentViolationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(recentFilterTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addComponent(recentRefreshButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -244,13 +242,12 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
                 .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(256, Short.MAX_VALUE))
-            .addComponent(jScrollPane6)
+                .addContainerGap())
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
         );
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(searchPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchButton)
                     .addComponent(searchTextInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -261,7 +258,10 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         jTabbedPane2.addTab("Search Violations", searchPanel);
 
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(88, 88, 88)));
+
         fileMenu.setText("File");
+        fileMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -302,8 +302,21 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         toolsMenu.setText("Tools");
 
-        jMenuItem1.setText("Enter Plate Pass");
-        toolsMenu.add(jMenuItem1);
+        datePassMenuItem.setText("Enter Date Pass");
+        datePassMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                datePassMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(datePassMenuItem);
+
+        timePassMenuItem.setText("Enter Time Pass");
+        timePassMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timePassMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(timePassMenuItem);
 
         jMenuBar1.add(toolsMenu);
 
@@ -349,18 +362,15 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         
         setupModels();
-        setupColumnStyles();
+        setupStyling();
         setupPopups();
         setupSorters();
 
         ClientController.test();
         //ClientController.activeVehiclesRequest();
-        ClientController.recentVehiclesRequest();
+        //ClientController.recentVehiclesRequest();
 
     }//GEN-LAST:event_formWindowOpened
-
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-    }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         ClientController.disconnectClient();
@@ -384,6 +394,16 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         ClientController.recentVehiclesRequest();
     }//GEN-LAST:event_recentRefreshButtonActionPerformed
 
+    private void datePassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datePassMenuItemActionPerformed
+        DatePassDialog dpd = new DatePassDialog(this, true);
+        dpd.setVisible(true);
+    }//GEN-LAST:event_datePassMenuItemActionPerformed
+
+    private void timePassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timePassMenuItemActionPerformed
+        TimePassDialog tpd = new TimePassDialog(this, true);
+        tpd.setVisible(true);
+    }//GEN-LAST:event_timePassMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -397,6 +417,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    
                     break;
                 }
             }
@@ -412,7 +433,8 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
                 try {
                     new MainForm().setVisible(true);
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    //System.out.println(ex.getMessage());
+                    java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, "Couldn''t Open Main Form: {0}", ex.getMessage());
                 }
             }
         });
@@ -435,7 +457,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         
         //If current expression doesn't parse, don't update.
         try {
-            rf = RowFilter.regexFilter(recentFilterTextInput.getText(), 0);
+            rf = RowFilter.regexFilter(recentFilterTextInput.getText(), 0, 1);
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
@@ -449,7 +471,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Vehicle packetVehicle = packet.getVehicle();
+                Vehicle packetVehicle = (Vehicle) packet.getData();
                 
                 if(packetVehicle == null){
                     return;
@@ -482,7 +504,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
     }
 
-    private void setupColumnStyles(){
+    private void setupStyling(){
         
         ImageIcon plateIcon = new ImageIcon("./src/resources/plateIcon.png");
         ImageIcon lotIcon = new ImageIcon("./src/resources/lotIcon.png");
@@ -492,15 +514,26 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         
         JLabel plateLabel = new JLabel("", JLabel.CENTER);
         plateLabel.setIcon(plateIcon);
+        plateLabel.setToolTipText("Plate Number");
         JLabel dateLabel = new JLabel("", JLabel.CENTER);
         dateLabel.setIcon(dateIcon);
+        dateLabel.setToolTipText("Date of Entry");
         JLabel lotLabel = new JLabel("", JLabel.CENTER);
         lotLabel.setIcon(lotIcon);
+        lotLabel.setToolTipText("Lot Number");
         JLabel timeLabel = new JLabel("", JLabel.CENTER);
         timeLabel.setIcon(timeIcon);
+        timeLabel.setToolTipText("Time Remaining");
         JLabel violationLabel = new JLabel("", JLabel.CENTER);
         violationLabel.setIcon(violationIcon);
+        violationLabel.setToolTipText("Date of Violation");
 
+        plateLabel.setBorder(BorderFactory.createEtchedBorder());
+        dateLabel.setBorder(BorderFactory.createEtchedBorder());
+        lotLabel.setBorder(BorderFactory.createEtchedBorder());
+        timeLabel.setBorder(BorderFactory.createEtchedBorder());
+        violationLabel.setBorder(BorderFactory.createEtchedBorder());
+        
         TableCellRenderer renderer = new JTableHeaderIconRenderer();
 
         TableColumnModel pendingColumnModel = pendingTable.getColumnModel();
@@ -606,6 +639,8 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
     private void setupPopups() {
         
+        searchButton.setMnemonic(KeyEvent.VK_ENTER);
+        
         pendingTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -701,6 +736,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem datePassMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
@@ -708,27 +744,24 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.ButtonGroup pendingButtonGroup;
     private javax.swing.JTextField pendingFilterTextInput;
     private javax.swing.JButton pendingRefreshButton;
     private javax.swing.JTable pendingTable;
-    private javax.swing.ButtonGroup recentButtonGroup;
     private javax.swing.JTextField recentFilterTextInput;
     private javax.swing.JButton recentRefreshButton;
     private javax.swing.JTable recentTable;
     private javax.swing.JPanel recentViolationsPanel;
     private javax.swing.JButton searchButton;
-    private javax.swing.ButtonGroup searchButtonGroup;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTable searchTable;
     private javax.swing.JTextField searchTextInput;
     private javax.swing.JMenuItem serverSettingsMenuItem;
     private javax.swing.JMenu settingsMenu;
+    private javax.swing.JMenuItem timePassMenuItem;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JPanel vehiclesPendingPanel;
     // End of variables declaration//GEN-END:variables

@@ -4,6 +4,12 @@
  */
 package cyprusgui;
 
+import java.awt.Image;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import support.Vehicle;
 
@@ -21,8 +27,19 @@ public class ImageViewerDialog extends javax.swing.JDialog {
         initComponents();
         
         if(vehicle.getImageBytes() != null && vehicle.getImageBytes().length > 0){
-            imageLabel.setIcon(new ImageIcon(vehicle.getImageBytes()));
-            noImageLabel.setText(null);
+            try {
+                Image img = ImageIO.read(new ByteArrayInputStream(vehicle.getImageBytes()));
+                
+                //Resize to fit this window
+                Image resizedImage = img.getScaledInstance(this.getWidth() , this.getHeight(), Image.SCALE_FAST);
+                imageLabel.setIcon(new ImageIcon(resizedImage));
+                
+                //Hide no image text  
+                noImageLabel.setText(null);
+            } catch (IOException ex) {
+                Logger.getLogger(ImageViewerDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 

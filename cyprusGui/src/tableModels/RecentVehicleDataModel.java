@@ -4,10 +4,10 @@
  */
 package tableModels;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import support.Vehicle;
 
@@ -21,11 +21,11 @@ public class RecentVehicleDataModel extends AbstractTableModel {
     public static int LotNumberColumn = 1;
     public static int DateEnteredColumn = 2;
     
-    private ArrayList<Vehicle> vehicles;
+    private List<Vehicle> vehicles;
     private SimpleDateFormat rowDateFormatter;
     
     public RecentVehicleDataModel(){
-        vehicles = new ArrayList();
+        vehicles = Collections.synchronizedList(new ArrayList<Vehicle>());
         rowDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
     
@@ -57,10 +57,19 @@ public class RecentVehicleDataModel extends AbstractTableModel {
         return rowDateFormatter.format(selectedVehicle.getGraceEndDate());
     }
     
+     /**
+     * Returns a row that represents a vehicle
+     * @param rowIndex index of the row to get
+     * @return the vehicle at the specified rowindex
+     */
     public Vehicle getRow(int rowIndex){
         return vehicles.get(rowIndex);
     }
     
+     /**
+     * Adds a row to the table
+     * @param vehicle the vehicle to add
+     */   
     public void addRow(Vehicle vehicle) {
 
         //This list has a cap of 50
@@ -72,12 +81,19 @@ public class RecentVehicleDataModel extends AbstractTableModel {
         fireTableRowsInserted(row, row);
     }
     
+     /**
+     * Removes a row from the table
+     * @param vehicle the vehicle to remove
+     */ 
     public void removeRow(Vehicle vehicle) {
         int row = vehicles.indexOf(vehicle);
         vehicles.remove(vehicle);
         fireTableRowsDeleted(row, row);
     }
     
+     /**
+     * Clears the table data
+     */
     public void clearData(){
         vehicles.clear();
         this.fireTableDataChanged();

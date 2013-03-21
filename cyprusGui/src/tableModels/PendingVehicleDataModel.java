@@ -6,16 +6,16 @@ package tableModels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import support.Vehicle;
 
 /**
- *
+ * An implementation of the AbstractTableModel to serve for pending vehicles.
  * @author James
  */
 public class PendingVehicleDataModel extends AbstractTableModel {
@@ -25,13 +25,17 @@ public class PendingVehicleDataModel extends AbstractTableModel {
     public static int TimeRemainingColumn = 2;
     public static int DateEnteredColumn = 3;
     
-    private volatile ArrayList<Vehicle> vehicles;
+    private volatile List<Vehicle> vehicles;
     private RecentVehicleDataModel recentDataModel;
     private Timer gracePeriodTimer; 
     private SimpleDateFormat rowDateFormatter;
 
+    /**
+     * Creates a new model to serve for pending vehicles
+     * @param recentModel the recent data model to add vehicles to after they expire
+     */
     public PendingVehicleDataModel(RecentVehicleDataModel recentModel) {
-        vehicles = new ArrayList();
+        vehicles = Collections.synchronizedList(new ArrayList<Vehicle>());
         recentDataModel = recentModel;
         
         ActionListener taskPerformer = new ActionListener() {
@@ -82,17 +86,29 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         return rowDateFormatter.format(selectedVehicle.getEntryDate());
     }
 
+    /**
+     * Returns a row that represents a vehicle
+     * @param rowIndex index of the row to get
+     * @return the vehicle at the specified rowindex
+     */
     public Vehicle getRow(int rowIndex) {
         return vehicles.get(rowIndex);
     }
 
-    
+    /**
+     * Adds a row to the table
+     * @param vehicle the vehicle to add
+     */
     public void addRow(Vehicle vehicle) {
         vehicles.add(vehicle);
         int row = vehicles.indexOf(vehicle);
         fireTableRowsInserted(row, row);
     }
 
+    /**
+     * Removes a row from the table
+     * @param vehicle the vehicle to remove
+     */
     public void removeRow(Vehicle vehicle) {
         int row = vehicles.indexOf(vehicle);
         vehicles.remove(vehicle);
@@ -100,6 +116,11 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         fireTableRowsDeleted(row, row);
     }
     
+    /**
+     * Determines if the table contains a vehicle
+     * @param vehicle the vehicle to test
+     * @return true if it contains the specified vehicle, false otherwise
+     */
     public boolean contains(Vehicle vehicle){
         if(vehicles.contains(vehicle)){
             return true;
@@ -108,6 +129,9 @@ public class PendingVehicleDataModel extends AbstractTableModel {
         return false;
     }
     
+    /**
+     * Clears the table data
+     */
     public void clearData(){
         vehicles.clear();
         this.fireTableDataChanged();

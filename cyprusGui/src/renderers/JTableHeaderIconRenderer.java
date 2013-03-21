@@ -5,16 +5,12 @@
 package renderers;
 
 import java.awt.Component;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- *
+ * A basic implementation of cellrenderer to allow JTable headers to have icons
  * @author James
  */
 public class JTableHeaderIconRenderer extends DefaultTableCellRenderer{

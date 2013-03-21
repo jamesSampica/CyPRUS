@@ -12,9 +12,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import support.Packet;
+import support.Vehicle;
 import utils.SerializationUtils;
 
 /**
@@ -86,20 +88,25 @@ public class ClientController {
             serverPort = Integer.parseInt(reader.readLine());
             serverIP = reader.readLine();
         } catch (FileNotFoundException e) {
-            System.out.println("Settings not found: " + e.getMessage());
+            //System.out.println("Settings not found: " + e.getMessage());
+            java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, "Settings not found: {0}", e.getMessage());
         } catch (IOException e) {
-            System.out.println("IO Error occurred: " + e.getMessage());
+            //System.out.println("IO Error occurred: " + e.getMessage());
+            java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, "IO Error occurred: {0}", e.getMessage());
         } catch (NumberFormatException e) {
-            System.out.println("Couldn't parse settings port as int: " + e.getMessage());
+            //System.out.println("Couldn't parse settings port as int: " + e.getMessage());
+            java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, "Couldn''t parse settings port as int: {0}", e.getMessage());
         } catch (Exception e) {
-            System.out.println("Generic Exception occurred: " + e.getMessage());
+            //System.out.println("Generic Exception occurred: " + e.getMessage());
+            java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, "Generic Exception occurred: {0}", e.getMessage());
         } finally {
             if (file != null) {
                 try {
                     reader.close();
                     file.close();
                 } catch (IOException e) {
-                    System.out.println("IO Error occurred: " + e.getMessage());
+                    //System.out.println("IO Error occurred: " + e.getMessage());
+                    java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, "IO Error occurred: {0}", e.getMessage());
                 }
             }
         }
@@ -120,14 +127,15 @@ public class ClientController {
             writer.newLine();
             writer.write(serverIP);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+            java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, e.getMessage());
         } finally {
             if (output != null) {
                 try {
                     writer.close();
                     output.close();
                 } catch (IOException e) {
-                    System.out.println(e.getMessage());
+                    java.util.logging.Logger.getLogger(ClientController.class.getName()).log(java.util.logging.Level.WARNING, e.getMessage());
                 }
             }
         }
@@ -204,12 +212,17 @@ public class ClientController {
         }
 
         Packet toSend = new Packet(Packet.SearchCommand);
-        toSend.setSearchString(searchKey);
+        toSend.setData(searchKey);
         byte[] bytesToSend = SerializationUtils.packetToBytes(toSend);
 
         client.writeMessage(bytesToSend);
     }
 
+    
+    /**
+     * Sends a request to stream this client all vehicles that have been recently
+     * tagged as violations
+     */
     public static void recentVehiclesRequest(){
         if (!isConnected()) {
             return;
@@ -221,6 +234,51 @@ public class ClientController {
         client.writeMessage(bytesToSend);
     }
     
+    
+    /**
+     * Sends a server request to store a new platenumber and lotnumber combination
+     * with a date pass. Any vehicles that enter with this combination are ignored
+     * by the server until the expiration date
+     * @param platenumber the vehicles platenumber
+     * @param lotnumber the vehicles's lotnumber
+     * @param expiration the desired expiration date of the pass
+     */
+    public static void sendDatePassRequest(String platenumber, String lotnumber, Date expiration){
+        Packet toSend = new Packet(Packet.InsertDatePassCommand);
+        
+        Vehicle v = new Vehicle();
+        v.setLotNumber(lotnumber);
+        v.setPlateNumber(platenumber);
+        v.setGraceEndDate(expiration);
+        toSend.setData(v);
+        
+        byte[] bytesToSend = SerializationUtils.packetToBytes(toSend);
+
+        client.writeMessage(bytesToSend);
+    }
+    
+    /**
+     * Sends a server request to store a new platenumber and lotnumber combination
+     * with a date pass. Any vehicles that enter with this combination are ignored
+     * by the server until the expiration date
+     * @param platenumber the vehicles platenumber
+     * @param lotnumber the vehicles's lotnumber
+     * @param expiration the desired expiration date of the pass
+     */
+     public static void sendTimePassRequest(String platenumber, String lotnumber, int hours){
+        Packet toSend = new Packet(Packet.InsertTimePassCommand);
+       
+        Vehicle v = new Vehicle();
+        v.setLotNumber(lotnumber);
+        v.setPlateNumber(platenumber);
+        v.setTimePassAmount(hours);
+        toSend.setData(v);
+        
+        byte[] bytesToSend = SerializationUtils.packetToBytes(toSend);
+
+        client.writeMessage(bytesToSend);
+    }
+     
     /**
      * Sends a request to the server to stream all active vehicles to this
      * client. Data sent back comes streaming to PacketListeners

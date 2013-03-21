@@ -1,7 +1,5 @@
 package server;
 
-import java.io.Console;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {

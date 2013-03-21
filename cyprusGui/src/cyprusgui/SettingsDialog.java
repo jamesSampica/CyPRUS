@@ -22,7 +22,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         ipTextField.setText(ClientController.getServerIP());
         
         //Handle window closing correctly.
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
     /**
      * This method is called from within the constructor to initialize the form.

@@ -84,7 +84,6 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         settingsMenu = new javax.swing.JMenu();
         serverSettingsMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         datePassMenuItem = new javax.swing.JMenuItem();
@@ -287,9 +286,6 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
         helpMenu.setText("Help");
 
-        helpMenuItem.setText("Help Contents");
-        helpMenu.add(helpMenuItem);
-
         aboutMenuItem.setText("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -357,18 +353,17 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 
-        ClientController.setupFromFileSettings();
-        ClientController.registerDataListener(this);
-
-        
         setupModels();
         setupStyling();
         setupPopups();
         setupSorters();
+        
+        ClientController.setupFromFileSettings();
+        ClientController.registerDataListener(this);
 
         ClientController.test();
-        //ClientController.activeVehiclesRequest();
-        //ClientController.recentVehiclesRequest();
+        ClientController.activeVehiclesRequest();
+        ClientController.recentVehiclesRequest();
 
     }//GEN-LAST:event_formWindowOpened
 
@@ -740,7 +735,6 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JMenuBar jMenuBar1;

@@ -118,7 +118,7 @@ public class ServerClient extends BaseMessageClient {
 		    	}
     			
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				 //TODO Auto-generated catch block
 				//e.printStackTrace();
 				Logger.getLogger(BaseMessageClient.class.getName()).log(Level.WARNING,  " processImageReceive IOException: " + e.getMessage() );
 			}

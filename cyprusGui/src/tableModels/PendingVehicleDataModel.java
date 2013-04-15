@@ -49,7 +49,7 @@ public class PendingVehicleDataModel extends AbstractTableModel {
                 }
             }
             };
-        gracePeriodTimer = new Timer( 100 , taskPerformer);
+        gracePeriodTimer = new Timer( 250 , taskPerformer);
         gracePeriodTimer.setRepeats(true);
         gracePeriodTimer.start();
 
@@ -80,7 +80,7 @@ public class PendingVehicleDataModel extends AbstractTableModel {
             return selectedVehicle.getLotNumber();
         } else if (columnIndex == TimeRemainingColumn) {
                 fireTableDataChanged();
-                return selectedVehicle.getGraceEndDate().getTime() - System.currentTimeMillis();
+                return (selectedVehicle.getGraceEndDate().getTime() - System.currentTimeMillis()) / 1000;
         }
 
         return rowDateFormatter.format(selectedVehicle.getEntryDate());

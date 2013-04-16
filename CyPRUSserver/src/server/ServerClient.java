@@ -1,6 +1,10 @@
 package server;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +12,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import database.JDBCDatabase;
 
@@ -94,33 +100,71 @@ public class ServerClient extends BaseMessageClient {
 		}
 	}
 	private void processImageReceive(byte[] message){			
-			try {
+			//try {
 				//test code
-				Path dir = Paths.get("./plateStorage/violationplates/spoonz.jpg"); 
+				//Path dir = Paths.get("./plateStorage/violationplates/spoonz.jpg"); 
 				
 				//test code
-				byte[] b = Files.readAllBytes(dir);
+				//byte[] b = Files.readAllBytes(dir);
 				
-				//String[] nodeDataSplit = VehicleImageUtils.getPlateAndLotFromBytes(message);
+				try{
+					String fileName = String.valueOf(System.currentTimeMillis());
+					
+					//Save image to temp directory
+					//deploy code
+					saveRawImage(message, fileName);
+					
+					//test code
+					//saveTempImage(b, fileName);
+					
+					//Execute c image processing
+					processCharacterRecognition(fileName);
+					
+					//Read image with metadata back in
+					message = getImageWithMetadata(fileName);
+				}
+				catch(Exception e){
+					Logger.getLogger(BaseMessageClient.class.getName()).log(
+							Level.SEVERE,
+							"processImageReceive Failed to do character recognition: "
+									+ e.getMessage());
+				}
 				
-				//test code
-		    	String[] nodeDataSplit = VehicleImageUtils.getPlateAndLotFromBytes(b);
+				String[] nodeDataSplit = VehicleImageUtils.getPlateAndLotFromBytes(message);
 		    	
 		    	if(nodeDataSplit != null && nodeDataSplit.length >= 2){
 		    		Vehicle capturedVehicle = new Vehicle(nodeDataSplit[0], nodeDataSplit[1]);
-		    		
-		    		//test code
-		    		capturedVehicle.setImageBytes(b);
-		    		
-	                //capturedVehicle.setImageBytes(message);
+
+	                capturedVehicle.setImageBytes(message);
 	                
 	                this.server.processReceivedData(capturedVehicle);
 		    	}
     			
-			} catch (IOException e) {
-				 //TODO Auto-generated catch block
-				//e.printStackTrace();
-				Logger.getLogger(BaseMessageClient.class.getName()).log(Level.WARNING,  " processImageReceive IOException: " + e.getMessage() );
-			}
+			//} catch (IOException e) {
+				//Logger.getLogger(BaseMessageClient.class.getName()).log(Level.WARNING,  " processImageReceive IOException: " + e.getMessage() );
+			//}
+	}
+	
+	private void saveRawImage(byte[] message, String fileName) throws Exception{
+    		String directoryPath = "./plateStorage/temp/";
+    		
+    		InputStream in = new ByteArrayInputStream(message);
+    		
+    	    BufferedImage bi = ImageIO.read(in);
+    	    File outputfile = new File(directoryPath + fileName + ".jpg");
+    	    ImageIO.write(bi, "jpg", outputfile);
+	}
+	
+	private void processCharacterRecognition(String fileName) throws Exception{
+			String directoryPath = "./plateStorage/temp/" + fileName + ".jpg";
+			Runtime r = Runtime.getRuntime();
+			Process p = r.exec("./localize " + directoryPath);
+			p.waitFor();
+	}
+	
+	private byte[] getImageWithMetadata(String filename) throws Exception{
+			String directoryPath = "./plateStorage/temp/" + filename;
+			Path imagePath = Paths.get(directoryPath + ".jpg");
+			return Files.readAllBytes(imagePath);
 	}
 }

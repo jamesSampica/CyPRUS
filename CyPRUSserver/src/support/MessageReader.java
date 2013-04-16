@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
  */
 public class MessageReader implements Runnable {
 
-	private static final Executor POOL = Executors.newFixedThreadPool(24);
+	private static final Executor POOL = Executors.newFixedThreadPool(1);
 
 	final private MessageClient client;
 	private DataInputStream stream;

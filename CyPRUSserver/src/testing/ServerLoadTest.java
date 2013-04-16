@@ -2,9 +2,7 @@ package testing;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.junit.Test;

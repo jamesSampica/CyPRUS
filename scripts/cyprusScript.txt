@@ -1,0 +1,34 @@
+use cyprus
+
+SELECT 'Dropping vehicle_violations' AS ' ';
+
+drop table vehicle_violations;
+
+SELECT 'Dropping date_passes' AS ' ';
+
+drop table date_passes;
+
+SELECT 'Dropping time_passes' AS ' ';
+
+drop table time_passes;
+
+SELECT 'Dropping problem_plates' AS ' ';
+
+drop table problem_plates;
+
+
+SELECT 'Creating vehicle_violations' AS ' ';
+
+create table vehicle_violations(platenumber varchar(255), lotnumber varchar(255), violationdate datetime);
+
+SELECT 'Creating date_passes' AS ' ';
+
+create table date_passes(platenumber varchar(255), lotnumber varchar(255), expirationdate datetime, primary key(platenumber, lotnumber));
+
+SELECT 'Creating time_passes' AS ' ';
+
+create table time_passes(platenumber varchar(255), lotnumber varchar(255), hours int, primary key(platenumber, lotnumber));
+
+SELECT 'Creating problem_plates' AS ' ';
+
+create table problem_plates(platenumber varchar(255));

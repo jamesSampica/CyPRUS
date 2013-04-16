@@ -3,7 +3,6 @@ package server;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -158,13 +157,20 @@ public class ServerClient extends BaseMessageClient {
 	private void processCharacterRecognition(String fileName) throws Exception{
 			String directoryPath = "./plateStorage/temp/" + fileName + ".jpg";
 			Runtime r = Runtime.getRuntime();
-			Process p = r.exec("./localize " + directoryPath);
+			Process p = r.exec("../localize " + directoryPath);
 			p.waitFor();
 	}
 	
 	private byte[] getImageWithMetadata(String filename) throws Exception{
-			String directoryPath = "./plateStorage/temp/" + filename;
-			Path imagePath = Paths.get(directoryPath + ".jpg");
-			return Files.readAllBytes(imagePath);
+			String directoryPath = "./plateStorage/temp/" + filename + ".jpg";
+			Path imagePath = Paths.get(directoryPath);
+			byte[] imageBytes = Files.readAllBytes(imagePath);
+			
+			//Remove the file
+			Runtime r = Runtime.getRuntime();
+			Process p = r.exec("rm -f " + directoryPath);
+			p.waitFor();
+			
+			return imageBytes;
 	}
 }

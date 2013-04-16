@@ -46,8 +46,8 @@ public class VehicleImageUtils {
 
 			ExifSubIFDDirectory exifdir = metadata.getDirectory(ExifSubIFDDirectory.class);
 			ExifSubIFDDescriptor exifdes = new ExifSubIFDDescriptor(exifdir);
-
-			if(exifdes.getUserCommentDescription() != null){
+			
+			if(exifdes != null && exifdes.getUserCommentDescription() != null){
 				String nodeData = new String(exifdes.getUserCommentDescription().toString());
 
 				nodeDataSplit = nodeData.split(" ");
@@ -65,6 +65,9 @@ public class VehicleImageUtils {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			Logger.getLogger(VehicleImageUtils.class.getName()).log(Level.WARNING,  "getPlateAndLotFromBytes IOException: " + e.getMessage());
+		}
+		catch(Exception e){
+			Logger.getLogger(VehicleImageUtils.class.getName()).log(Level.WARNING,  "getPlateAndLotFromBytes Generic Exception: " + e.getMessage());
 		}
 		
 		return nodeDataSplit;

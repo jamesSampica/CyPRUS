@@ -8,6 +8,8 @@
 	@return On succes, a file descriptor for a new socket is returned. 
 	On error, -1 is returned and errno is set appropriately.
 */
+
+using namespace std;
 int tcp_open(char * address, int port)
 {
 	int sockfd, err;
@@ -203,6 +205,8 @@ size_t populateImage(char * buffer, char * image,int sockfd, size_t bufSize)
 	
 
 	free(lbuffer);
+
+	fclose(img);
 	return ((lSize)*sizeof(char)) +(sizeof(char)*bufSize);
 }
 
@@ -219,9 +223,10 @@ char  generateMD5hash(char * file)
 	return NOT_YET_IMPLEMENTED;
 }
 
-/**Sends image specified byt (image) to the desination specified using (sockfd). 
+/**
+Sends image specified by (image) to the desination specified using (sockfd). 
 */
-int sendImageByteArray(char * image,  int sockfd)
+int sendImageByteArray(char * image,  int sockfd, int printDebug)
 {
 	//printf("Retreving Image....\n");			
 	FILE * img = fopen(image, "r");
@@ -243,6 +248,11 @@ int sendImageByteArray(char * image,  int sockfd)
 	
 	fread(lbuffer, 1, lSize, img);
 	
+
+	if(printDebug)
+		printDebugByteArray( lbuffer, lSize);
+
+	
 	int tmp = htonl(lSize);
 	write(sockfd, &tmp, 4);
 
@@ -253,5 +263,22 @@ int sendImageByteArray(char * image,  int sockfd)
 	}
 		
 	free(lbuffer);
+	fclose(img);
 	return sizeof(lbuffer);
+}
+
+
+/**
+Print contents of array to be sent to a file in hex format. Used to compare between board and 
+server.
+*/
+void printDebugByteArray(char * lbuffer, int lsize)
+{
+	std::ofstream debug;
+	debug.open("hexdebug.txt", ios::binary);
+
+	for(int i = 0; i < lsize; i++)
+		debug<<(hex)<<lbuffer[i];
+
+	debug.close();	
 }

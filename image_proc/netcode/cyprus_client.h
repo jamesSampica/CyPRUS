@@ -21,6 +21,7 @@
 //#include <gnutls/gnutls.h> 
 #include <openssl/md5.h>
 #include <exiv2/exiv2.hpp>
+#include <fstream>
 
 //======== Functions =================
 int tcp_open(char * address, int port);
@@ -39,6 +40,8 @@ char   generateMD5hash(char * file);
 
 size_t populateImage(char * buffer, char * image,int sockfd, size_t bufSize);
 
-int sendImageByteArray(char * image,  int sockfd);
+int sendImageByteArray(char * image,  int sockfd, int printDebug);
+
+void printDebugByteArray(char * lbuffer, int lsize);
 
 #endif

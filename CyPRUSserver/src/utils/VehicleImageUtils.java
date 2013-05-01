@@ -99,7 +99,7 @@ public class VehicleImageUtils {
      * @return true if the image was saved successfully, false otherwise
      */
     public static boolean saveImageBytesForVehicle(Vehicle v){
-    	
+    	//TODO We lose metadata when images are saved through ImageIO due to lossy compression
     	try {
     	    // save image
     		String directoryPath = "./plateStorage/violationplates/";

@@ -361,7 +361,7 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         ClientController.setupFromFileSettings();
         ClientController.registerDataListener(this);
 
-        ClientController.test();
+        //ClientController.test();
         ClientController.activeVehiclesRequest();
         ClientController.recentVehiclesRequest();
 
@@ -638,6 +638,35 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         
         pendingTable.addMouseListener(new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                final int selectedRow = pendingTable.rowAtPoint(e.getPoint());
+
+                //If selected row is legal and it's a popup trigger and clicking on table
+                if ((selectedRow >= 0 && selectedRow < pendingTable.getRowCount())
+                        && (e.isPopupTrigger() && e.getComponent() instanceof JTable)) {
+
+                    //Make new popup
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem imageViewer = new JMenuItem("View Image");
+
+                    //Add the click listener
+                    imageViewer.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            //Open the viewer dialog on click
+                            (new ImageViewerDialog(null, true, pendingModel.getRow(selectedRow))).setVisible(true);
+                        }
+                    });
+
+                    //Add component
+                    popup.add(imageViewer);
+
+                    //Show popup
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+            
+            @Override
             public void mouseReleased(MouseEvent e) {
                 final int selectedRow = pendingTable.rowAtPoint(e.getPoint());
 
@@ -667,7 +696,38 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
             }
         });
         
+        
+        
         recentTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                final int selectedRow = recentTable.rowAtPoint(e.getPoint());
+
+                //If selected row is legal and it's a popup trigger and clicking on table
+                if ((selectedRow >= 0 && selectedRow < recentTable.getRowCount())
+                        && (e.isPopupTrigger() && e.getComponent() instanceof JTable)) {
+
+                    //Make new popup
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem imageViewer = new JMenuItem("View Image");
+
+                    //Add the click listener
+                    imageViewer.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            //Open the viewer dialog on click
+                            (new ImageViewerDialog(null, true, recentModel.getRow(selectedRow))).setVisible(true);
+                        }
+                    });
+
+                    //Add component
+                    popup.add(imageViewer);
+
+                    //Show popup
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+            
             @Override
             public void mouseReleased(MouseEvent e) {
                 final int selectedRow = recentTable.rowAtPoint(e.getPoint());
@@ -699,6 +759,35 @@ public class MainForm extends javax.swing.JFrame implements PacketListener {
         });
         
         searchTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                final int selectedRow = searchTable.rowAtPoint(e.getPoint());
+
+                //If selected row is legal and it's a popup trigger and clicking on table
+                if ((selectedRow >= 0 && selectedRow < searchTable.getRowCount())
+                        && (e.isPopupTrigger() && e.getComponent() instanceof JTable)) {
+
+                    //Make new popup
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem imageViewer = new JMenuItem("View Image");
+
+                    //Add the click listener
+                    imageViewer.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            //Open the viewer dialog on click
+                            (new ImageViewerDialog(null, true, searchModel.getRow(selectedRow))).setVisible(true);
+                        }
+                    });
+
+                    //Add component
+                    popup.add(imageViewer);
+
+                    //Show popup
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+            
             @Override
             public void mouseReleased(MouseEvent e) {
                 final int selectedRow = searchTable.rowAtPoint(e.getPoint());

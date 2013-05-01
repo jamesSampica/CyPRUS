@@ -64,11 +64,13 @@ public class MessageWriter implements Runnable {
 					this.stream.writeInt( message.length );
 					this.stream.write( message );
 				}
-			} catch (InterruptedException e) {
+			
+			}
+			catch (InterruptedException e) {
 				//System.out.println("Byte Stream was interrupted " + e.getMessage());
 			} catch ( IOException e ) {
 				this.setConnected(false);
-				this.client.errorOnWrite(e);
+				//this.client.errorOnWrite(e);
 			}
 		}
 		

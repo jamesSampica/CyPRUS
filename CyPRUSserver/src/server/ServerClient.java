@@ -3,6 +3,7 @@ package server;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -49,6 +50,7 @@ public class ServerClient extends BaseMessageClient {
 		
 		if(packet == null){
 			processImageReceive(message);
+			//testProcessImageReceive(message);
 		}
 		else if(packet.getCommand() == Packet.ActiveVehiclesCommand){
 			processActiveVehiclesRequest();
@@ -98,53 +100,85 @@ public class ServerClient extends BaseMessageClient {
 			}
 		}
 	}
-	private void processImageReceive(byte[] message){			
-			//try {
-				//test code
-				//Path dir = Paths.get("./plateStorage/violationplates/spoonz.jpg"); 
-				
-				//test code
-				//byte[] b = Files.readAllBytes(dir);
-				
-				try{
-					String fileName = String.valueOf(System.currentTimeMillis());
-					
-					//Save image to temp directory
-					//deploy code
-					saveRawImage(message, fileName);
-					
-					//test code
-					//saveTempImage(b, fileName);
-					
-					//Execute c image processing
-					processCharacterRecognition(fileName);
-					
-					//Read image with metadata back in
-					message = getImageWithMetadata(fileName);
-				}
-				catch(Exception e){
-					Logger.getLogger(BaseMessageClient.class.getName()).log(
-							Level.SEVERE,
-							"processImageReceive Failed to do character recognition: "
-									+ e.getMessage());
-				}
-				
-				String[] nodeDataSplit = VehicleImageUtils.getPlateAndLotFromBytes(message);
-		    	
-		    	if(nodeDataSplit != null && nodeDataSplit.length >= 2){
-		    		Vehicle capturedVehicle = new Vehicle(nodeDataSplit[0], nodeDataSplit[1]);
 
-	                capturedVehicle.setImageBytes(message);
-	                
-	                this.server.processReceivedData(capturedVehicle);
-		    	}
-    			
-			//} catch (IOException e) {
-				//Logger.getLogger(BaseMessageClient.class.getName()).log(Level.WARNING,  " processImageReceive IOException: " + e.getMessage() );
-			//}
+	private void processImageReceive(byte[] message) {
+		try {
+			String fileName = String.valueOf(System.currentTimeMillis());
+			byte[] newImageData;
+
+			// Save image to temp directory
+			saveRawImage(message, fileName);
+
+			// Execute c image processing
+			processCharacterRecognition(fileName);
+
+			// Read image with metadata back in
+			newImageData = getImageWithMetadata(fileName);
+
+			String[] nodeDataSplit = VehicleImageUtils
+					.getPlateAndLotFromBytes(newImageData);
+
+			if (nodeDataSplit != null && nodeDataSplit.length >= 2) {
+				Vehicle capturedVehicle = new Vehicle(nodeDataSplit[0],
+						nodeDataSplit[1]);
+
+				capturedVehicle.setImageBytes(newImageData);
+
+				this.server.processReceivedData(capturedVehicle);
+			}
+		} catch (Exception e) {
+			Logger.getLogger(BaseMessageClient.class.getName()).log(
+					Level.SEVERE,
+					"processImageReceive Failed to do character recognition: "
+							+ e.getMessage());
+		}
 	}
 	
+	private void testProcessImageReceive(byte[] message){
+		try {
+			String fileName = String.valueOf(System.currentTimeMillis());
+			byte[] newImageData;
+			
+			Path dir = Paths.get("./plateStorage/violationplates/spoonz.jpg");
+
+			byte[] b = Files.readAllBytes(dir);
+			
+
+			// Save image to temp directory
+			saveRawImage(b, fileName);
+
+			// Execute c image processing
+			//processCharacterRecognition(fileName);
+
+			// Read image with metadata back in
+			newImageData = getImageWithMetadata(fileName);
+
+			String[] nodeDataSplit = VehicleImageUtils.getPlateAndLotFromBytes(newImageData);
+
+			if (nodeDataSplit != null && nodeDataSplit.length >= 2) {
+				Vehicle capturedVehicle = new Vehicle(nodeDataSplit[0],
+						nodeDataSplit[1]);
+
+				capturedVehicle.setImageBytes(newImageData);
+
+				this.server.processReceivedData(capturedVehicle);
+			}
+		} catch (IOException e) {
+			Logger.getLogger(BaseMessageClient.class.getName()).log(
+					Level.WARNING,
+					" processImageReceive IOException: " + e.getMessage());
+		} catch (Exception e) {
+
+			Logger.getLogger(BaseMessageClient.class.getName()).log(
+					Level.SEVERE,
+					"processImageReceive Failed to do character recognition: "
+							+ e.getMessage());
+		}
+	}
+	
+	
 	private void saveRawImage(byte[] message, String fileName) throws Exception{
+			//TODO We lose metadata when images are saved through ImageIO due to lossy compression
     		String directoryPath = "./plateStorage/temp/";
     		
     		InputStream in = new ByteArrayInputStream(message);
@@ -162,14 +196,15 @@ public class ServerClient extends BaseMessageClient {
 	}
 	
 	private byte[] getImageWithMetadata(String filename) throws Exception{
-			String directoryPath = "./plateStorage/temp/" + filename + ".jpg";
+			//String directoryPath = "./plateStorage/temp/" + filename + ".jpg";
+			String directoryPath = "./plateStorage/violationplates/spoonz.jpg";
 			Path imagePath = Paths.get(directoryPath);
 			byte[] imageBytes = Files.readAllBytes(imagePath);
 			
 			//Remove the file
-			Runtime r = Runtime.getRuntime();
-			Process p = r.exec("rm -f " + directoryPath);
-			p.waitFor();
+			//Runtime r = Runtime.getRuntime();
+			//Process p = r.exec("rm -f " + directoryPath);
+			//p.waitFor();
 			
 			return imageBytes;
 	}

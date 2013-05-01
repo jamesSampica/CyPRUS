@@ -169,7 +169,7 @@ public class ClientController {
         try {
             client = new Client(serverIP, serverPort);
         } catch (Exception ex) {
-            Logger.getLogger(ClientController.class.getName()).log(Level.SEVERE, "An error occurred when setting up client", ex);
+            Logger.getLogger(ClientController.class.getName()).log(Level.SEVERE, "An error occurred when setting up client");
         }
     }
 

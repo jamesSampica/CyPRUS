@@ -1,7 +1,7 @@
 package support;
 
 import java.io.DataInputStream;
-import java.io.EOFException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -69,7 +69,7 @@ public class MessageReader implements Runnable {
 				POOL.execute(runnable);
 			}
 		}
-		catch (EOFException eof){
+		catch (IOException ioe){
 			//When client disconnects don't error out
 		}
 		catch (Exception e) {

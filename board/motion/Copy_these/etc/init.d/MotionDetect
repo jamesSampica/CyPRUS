@@ -1,0 +1,46 @@
+#!/bin/sh
+# ----------------------------------------------------------------------
+#    Michael Flagg
+#    Senior Design May 13-17
+#
+#    Manages the motion detection
+
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# ----------------------------------------------------------------------
+
+### BEGIN INIT INFO
+# Provides: apparmor
+# Required-Start:
+# Required-Stop:
+# Default-Start:
+# Default-Stop: 0 1 2 3 4 5 6
+# Short-Description: Motion detection initialization
+# Description: Starts motion detection
+### END INIT INFO
+
+usage() {
+    echo "Usage: $0 {start|stop|restart|reload|force-reload|kill}"
+}
+
+test -x ${PARSER} || exit 0 # by debian policy
+
+case "$1" in
+    start)
+        /usr/local/share/MotionHandler/start.sh
+        rc=$?
+        ;;
+    stop|kill)
+        /usr/local/share/MotionHandler/stop.sh
+        ;;
+    restart|reload|force-reload)
+        /usr/local/share/MotionHandler/stop.sh
+        /usr/local/share/MotionHandler/start.sh
+        rc=$?
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+exit $rc

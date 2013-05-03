@@ -1,0 +1,9 @@
+Image Processing Setup
+--------------------------------------------
+
+1) Install OpenCV and prerequisites. Instructions can be found at:
+ http://opencv.willowgarage.com/wiki/InstallGuide_Linux
+
+2) Make sure the programs in the netcode directory have already been built. Follow the instructions in netcode/README.
+
+3) To build, run "cmake . " in directory with localize.cpp. Then run "make".

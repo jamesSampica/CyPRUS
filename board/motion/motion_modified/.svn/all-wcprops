@@ -1,0 +1,479 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/motion/!svn/ver/557/trunk
+END
+video_freebsd.c
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/551/trunk/video_freebsd.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/motion/!svn/ver/538/trunk/Makefile.in
+END
+pwc-ioctl.h-10.0.10
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/motion/!svn/ver/381/trunk/pwc-ioctl.h-10.0.10
+END
+netcam_wget.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/motion/!svn/ver/381/trunk/netcam_wget.h
+END
+commit-version.sh
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/motion/!svn/ver/499/trunk/commit-version.sh
+END
+track.c
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/536/trunk/track.c
+END
+video_freebsd.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/514/trunk/video_freebsd.h
+END
+mmx.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/382/trunk/mmx.h
+END
+track.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/443/trunk/track.h
+END
+netcam_jpeg.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/motion/!svn/ver/514/trunk/netcam_jpeg.c
+END
+version.sh
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/motion/!svn/ver/499/trunk/version.sh
+END
+ffmpeg-0.4.8-macosx.patch
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/motion/!svn/ver/1/trunk/ffmpeg-0.4.8-macosx.patch
+END
+sdl.c
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/524/trunk/sdl.c
+END
+md5.c
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/514/trunk/md5.c
+END
+conf.c
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/motion/!svn/ver/553/trunk/conf.c
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/1/trunk/COPYING
+END
+sdl.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/524/trunk/sdl.h
+END
+md5.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/514/trunk/md5.h
+END
+conf.h
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/motion/!svn/ver/551/trunk/conf.h
+END
+draw.c
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/motion/!svn/ver/552/trunk/draw.c
+END
+rotate.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/514/trunk/rotate.c
+END
+rotate.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/381/trunk/rotate.h
+END
+motion_guide.html
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/motion/!svn/ver/257/trunk/motion_guide.html
+END
+configure.in
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/motion/!svn/ver/557/trunk/configure.in
+END
+motion.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/551/trunk/motion.c
+END
+video.c
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/536/trunk/video.c
+END
+motion.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/554/trunk/motion.h
+END
+video.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/536/trunk/video.h
+END
+motion-dist.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/motion/!svn/ver/553/trunk/motion-dist.conf.in
+END
+config.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/motion/!svn/ver/540/trunk/config.h.in
+END
+event.c
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/546/trunk/event.c
+END
+README.FreeBSD
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/motion/!svn/ver/339/trunk/README.FreeBSD
+END
+event.h
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/517/trunk/event.h
+END
+video2.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/526/trunk/video2.c
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/motion/!svn/ver/557/trunk/configure
+END
+alg.c
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/504/trunk/alg.c
+END
+ffmpeg.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/557/trunk/ffmpeg.c
+END
+README.MacOSX
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/motion/!svn/ver/14/trunk/README.MacOSX
+END
+jpegutils.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/motion/!svn/ver/543/trunk/jpegutils.c
+END
+CHANGELOG
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/motion/!svn/ver/557/trunk/CHANGELOG
+END
+pwc-ioctl.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/motion/!svn/ver/381/trunk/pwc-ioctl.h
+END
+alg.h
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/428/trunk/alg.h
+END
+CODE_STANDARD
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/motion/!svn/ver/501/trunk/CODE_STANDARD
+END
+ffmpeg.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/499/trunk/ffmpeg.h
+END
+jpegutils.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/motion/!svn/ver/514/trunk/jpegutils.h
+END
+motion.init-FreeBSD.sh.in
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/motion/!svn/ver/265/trunk/motion.init-FreeBSD.sh.in
+END
+CREDITS
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/motion/!svn/ver/553/trunk/CREDITS
+END
+video_common.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/motion/!svn/ver/551/trunk/video_common.c
+END
+logger.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/550/trunk/logger.c
+END
+README.axis_2100
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/motion/!svn/ver/110/trunk/README.axis_2100
+END
+webhttpd.c
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/motion/!svn/ver/549/trunk/webhttpd.c
+END
+pwc-ioctl.h-pwc9.0.1
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/motion/!svn/ver/1/trunk/pwc-ioctl.h-pwc9.0.1
+END
+logger.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/550/trunk/logger.h
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/1/trunk/INSTALL
+END
+webhttpd.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/motion/!svn/ver/514/trunk/webhttpd.h
+END
+motion.init-Fedora.in
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/motion/!svn/ver/493/trunk/motion.init-Fedora.in
+END
+stream.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/514/trunk/stream.c
+END
+thread1.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/523/trunk/thread1.conf.in
+END
+stream.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/381/trunk/stream.h
+END
+thread2.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/523/trunk/thread2.conf.in
+END
+thread3.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/523/trunk/thread3.conf.in
+END
+thread4.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/motion/!svn/ver/408/trunk/thread4.conf.in
+END
+vloopback_motion.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/motion/!svn/ver/553/trunk/vloopback_motion.c
+END
+netcam.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/514/trunk/netcam.c
+END
+vloopback_motion.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/motion/!svn/ver/514/trunk/vloopback_motion.h
+END
+picture.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/motion/!svn/ver/543/trunk/picture.c
+END
+motion.init-Debian.in
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/motion/!svn/ver/265/trunk/motion.init-Debian.in
+END
+netcam.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/476/trunk/netcam.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/motion/!svn/ver/31/trunk/README
+END
+netcam_ftp.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/motion/!svn/ver/514/trunk/netcam_ftp.c
+END
+picture.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/motion/!svn/ver/381/trunk/picture.h
+END
+motion.spec.in
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/motion/!svn/ver/493/trunk/motion.spec.in
+END
+motion.1
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/motion/!svn/ver/553/trunk/motion.1
+END
+motion.logrotate
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/motion/!svn/ver/533/trunk/motion.logrotate
+END
+pwc-ioctl.h-pwc8.0
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/motion/!svn/ver/1/trunk/pwc-ioctl.h-pwc8.0
+END
+netcam_ftp.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/motion/!svn/ver/514/trunk/netcam_ftp.h
+END
+pwc-ioctl.h-10.0.5
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/motion/!svn/ver/1/trunk/pwc-ioctl.h-10.0.5
+END
+FAQ
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/motion/!svn/ver/1/trunk/FAQ
+END
+netcam_wget.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/motion/!svn/ver/502/trunk/netcam_wget.c
+END

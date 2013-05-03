@@ -1,0 +1,10 @@
+/var/log/motion.log {
+    missingok
+    notifempty
+    compress
+    size 10M
+    create 0600 root root
+    postrotate
+        /bin/service motion reload  >/dev/null  2>&1 || true
+    endscript
+}

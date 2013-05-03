@@ -1,0 +1,18 @@
+------Operation------
+To start: /etc/init.d/MotionDetect start
+To stop: /etc/init.d/MotionDetect stop
+To send a simulated motion event: Run send_motion_event in /usr/local/share/MotionDetection
+
+------Install instructions------
+Installation:
+1. Copy the folders under "Copy_these" to the root directory, preserving folder structure
+2. Run "make" and "sudo make install" in this directory
+3. Run "./configure --with-jpeg-turbo=/usr/lib/arm-linux-gnueabihf", "make" and "make install" in motion_modified. You may need to copy/paste the link command and add "-lpthread" at the end.
+8. Run "sudo update-rc.d MotionDetect defaults" 
+
+------Locations------
+Motion stuff is in /usr/local/share/MotionDetection
+init script is /etc/init.d/MotionDetect
+Motion config is /usr/local/etc/motion.conf
+
+

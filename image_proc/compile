@@ -1,1 +1,0 @@
-g++ netcode/cyprus_client.o -o localize localize.cpp `pkg-config opencv --cflags --libs` -lexiv2
